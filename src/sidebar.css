@@ -1,5 +1,5 @@
 .sidebar {
-  width: 100px; /* Largura inicial quando fechada */
+  width: 100px;
   background-color: #CF4647;
   height: 100vh;
   display: flex;
@@ -7,7 +7,7 @@
   align-items: center;
   padding-top: 20px;
   border-right: 1px solid #000;
-  transition: width 0.3s; /* Transição suave para a expansão */
+  transition: width 0.3s;
   border: none;
   box-shadow: 8px 2px 10px 2px black;
 }
@@ -42,15 +42,22 @@
   height: 40px;
 }
 
-/* Estilo para o texto que aparece ao lado dos ícones */
+img {
+  cursor: pointer;
+  transition: transform 0.3s;
+}
+
+img:hover {
+  transform: scale(1.2);
+}
+
 .sidebar-menu li span {
   margin-left: 10px;
   font-size: 16px;
   color: #fff;
-  display: none; /* Ocultado por padrão */
+  display: none;
 }
 
-/* Exibe o texto ao expandir */
 .sidebar.expanded .sidebar-menu li span {
   display: inline;
   font-size: 1.5rem;

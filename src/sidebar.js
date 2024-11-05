@@ -14,9 +14,13 @@ const Sidebar = () => {
     navigate('/hero');
   };
 
+  const goToHomePage = () => {
+    navigate('/');
+  };
+
   return (
     <div className={`sidebar ${isExpanded ? 'expanded' : ''}`}>
-      <img src="/assets/logoTheBoys.png" alt="The Boys Logo" className="sidebar-logo" />
+      <img src="/assets/logoTheBoys.png" alt="The Boys Logo" className="sidebar-logo" onClick={goToHomePage}/>
       <ul className="sidebar-menu">
         <li onClick={toggleSidebar}>
           <img src="/assets/menuOpen.png" alt="Abrir-menu" className="abrir-menu" style={{ width: '25px', height: '25px' }} />

@@ -1,6 +1,13 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
+
+  const navigate = useNavigate();
+  const goToHeroesPage = () => {
+    navigate('/hero');
+  };
+
   return (
     <div className='Home'>
       <h1>Bem-vindo ao Composto V</h1>
@@ -10,7 +17,7 @@ const Home = () => {
         Com o simulador de batalhas, usuários podem visualizar combates realistas que consideram força, popularidade e até o apoio público, revelando o verdadeiro lado dos heróis.
       </p>
       <div className='butoesMainpage'>
-        <button>Heróis</button>
+        <button onClick={goToHeroesPage}>Heróis</button>
         <button>Missões</button>
         <button>Crimes</button>
         <button>Simulador</button>
