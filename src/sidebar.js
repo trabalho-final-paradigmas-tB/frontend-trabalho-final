@@ -1,25 +1,35 @@
-import React from 'react';
 import './sidebar.css';
+import React, { useState } from 'react'; 
 
 const Sidebar = () => {
+  const [isExpanded, setIsExpanded] = useState(false);
+
+  const toggleSidebar = () => {
+    setIsExpanded(!isExpanded);
+  };
+
   return (
-    <div className="sidebar">
+    <div className={`sidebar ${isExpanded ? 'expanded' : ''}`}>
       <img src="/assets/logoTheBoys.png" alt="The Boys Logo" className="sidebar-logo" />
-      <ul className='sidebar-menu'>
-        <li>
-          <img src="/assets/menuOpen.png" alt="Abrir-menu" className='abrir-menu' />
+      <ul className="sidebar-menu">
+        <li onClick={toggleSidebar}>
+          <img src="/assets/menuOpen.png" alt="Abrir-menu" className="abrir-menu" style={{ width: '25px', height: '25px'}}/>
         </li>
         <li>
           <img src="/assets/superhero 1.png" alt="Heróis" />
+          {isExpanded && <span>Heróis</span>}
         </li>
         <li>
           <img src="/assets/target 1.png" alt="Missões" />
+          {isExpanded && <span>Missões</span>}
         </li>
         <li>
           <img src="/assets/prisoner 1.png" alt="Crimes" />
+          {isExpanded && <span>Crimes</span>}
         </li>
         <li>
           <img src="/assets/swords.png" alt="Simulador" />
+          {isExpanded && <span>Simulador</span>}
         </li>
       </ul>
     </div>

@@ -22,10 +22,40 @@ body {
 }
 
 h1 {
-  color: white;
+  color: #F5D061;
   text-align: center;
   justify-self: center;
   margin-top: 50px;
   font-family: var(--fonte-poppins);
   font-size: 64px;
+}
+
+.paragrafo {
+  color: white;
+  margin: 50px 20%;
+  text-align: justify;
+  font-size: 1.5rem;
+  line-height: 2;
+}
+
+.butoesMainpage {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.butoesMainpage button {
+  padding: 15px 40px;
+  border-radius: 15px;
+  background-color: #CF4647;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: transform 0.3s;
+  font-size: 24px;
+  font-family: var(--fonte-poppins);
+}
+
+.butoesMainpage button:hover {
+  transform: scale(1.1);
 }

@@ -1,40 +1,74 @@
 .sidebar {
-    width: 100px;
-    background-color: #CF4647;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding-top: 20px;
-    border-right: 1px solid #000;
-    border: none;
-  }
+  width: 100px; /* Largura inicial quando fechada */
+  background-color: #CF4647;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  border-right: 1px solid #000;
+  transition: width 0.3s; /* Transição suave para a expansão */
+  border: none;
+  box-shadow: 8px 2px 10px 2px black;
+}
 
-  .sidebar-logo {
-    width: 90px;
-    margin-bottom: 20px;
-  }
+.sidebar.expanded {
+  width: 400px;
+}
 
-  .sidebar-menu {
-    list-style-type: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
-  }
-  
-  .sidebar-menu li {
-    margin: 15px 0;
-  }
-  
-  .sidebar-menu li img {
-    width: 40px;
-    height: 40px;
-  }
-  
-  .sidebar-menu li a {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+.sidebar-logo {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+.sidebar-menu {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.sidebar-menu li {
+  display: flex;
+  align-items: center;
+  align-self: center;
+  margin: 15px 0;
+}
+
+.sidebar-menu li img {
+  width: 40px;
+  height: 40px;
+}
+
+/* Estilo para o texto que aparece ao lado dos ícones */
+.sidebar-menu li span {
+  margin-left: 10px;
+  font-size: 16px;
+  color: #fff;
+  display: none; /* Ocultado por padrão */
+}
+
+/* Exibe o texto ao expandir */
+.sidebar.expanded .sidebar-menu li span {
+  display: inline;
+  font-size: 1.5rem;
+}
+
+.abrir-menu {
+  transition: transform 0.3s;
+  cursor: pointer;
+}
+
+.abrir-menu:hover {
+  transform: scale(1.1);
+}
+
+.sidebar.expanded .abrir-menu {
+  transform: rotate(180deg);
+}
+
+.sidebar.expanded .abrir-menu:hover {
+  transform: rotate(180deg) scale(1.1);
+}
