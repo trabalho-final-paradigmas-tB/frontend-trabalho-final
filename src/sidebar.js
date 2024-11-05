@@ -11,7 +11,7 @@ const Sidebar = () => {
   };
 
   const goToHeroesPage = () => {
-    navigate('/hero');
+    navigate('/heroi');
   };
 
   const goToHomePage = () => {
@@ -26,15 +26,15 @@ const Sidebar = () => {
           <img src="/assets/menuOpen.png" alt="Abrir-menu" className="abrir-menu" style={{ width: '25px', height: '25px' }} />
         </li>
         <li onClick={goToHeroesPage}>
-          <img src="/assets/superhero 1.png" alt="Heróis" />
+          <img src="/assets/superhero.png" alt="Heróis" />
           {isExpanded && <span>Heróis</span>}
         </li>
         <li>
-          <img src="/assets/target 1.png" alt="Missões" />
+          <img src="/assets/target.png" alt="Missões" />
           {isExpanded && <span>Missões</span>}
         </li>
         <li>
-          <img src="/assets/prisoner 1.png" alt="Crimes" />
+          <img src="/assets/prisoner.png" alt="Crimes" />
           {isExpanded && <span>Crimes</span>}
         </li>
         <li>

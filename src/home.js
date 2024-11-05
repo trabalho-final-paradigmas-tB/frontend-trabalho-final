@@ -5,7 +5,7 @@ const Home = () => {
 
   const navigate = useNavigate();
   const goToHeroesPage = () => {
-    navigate('/hero');
+    navigate('/heroi');
   };
 
   return (

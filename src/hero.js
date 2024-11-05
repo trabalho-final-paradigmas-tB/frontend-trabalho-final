@@ -1,20 +1,39 @@
-import React from 'react';
-import './hero.css'
+import './hero.css';
+import React, { useState, useEffect } from 'react';
 
 function Hero() {
-    return (
-      <div className="Hero">
-        <h1>Heróis</h1>
-        <p>Nesta página é possível fazer adição, remoção, atualização e consulta de heróis no banco de dados.</p>
-        <div className="butoes">
-            <button>Inserir</button>
-            <button>Consultar</button>
-            <button>Remover</button>
-            <button>Atualizar</button>
-        </div>
+  const [heroes, setHeroes] = useState([]);
+
+  useEffect(() => {
+    const fetchHeroes = async () => {
+      try {
+        const response = await fetch('/heroi');
+        const data = await response.json();
+        setHeroes(data);
+      } catch (error) {
+        console.error('Erro ao buscar heróis:', error);
+      }
+    };
+    fetchHeroes();
+  }, []);
+
+  return (
+    <div className="Hero">
+      <h1>Heróis</h1>
+      <p>Nesta página é possível fazer adição, remoção, atualização e consulta de heróis no banco de dados.</p>
+      <div className="hero-container">
+        {heroes.length > 0 ? (
+          heroes.map((hero) => (
+            <div key={hero.codigo_heroi} className="hero-item">
+              {hero.nome_heroi}
+            </div>
+          ))
+        ) : (
+          <p>Nenhum herói encontrado.</p>
+        )}
       </div>
-    );
-  }
-  
-  export default Hero;
-  
+    </div>
+  );
+}
+
+export default Hero;

@@ -7,7 +7,7 @@ const AppRoutes = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} /> {/* Página inicial */}
-      <Route path="/hero" element={<Hero />} />
+      <Route path="/heroi" element={<Hero />} />
       {/* Defina outras rotas aqui */}
     </Routes>
   );
