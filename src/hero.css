@@ -1,0 +1,42 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+.Hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1 {
+    color: #F5D061;
+}
+
+p {
+    font-size: 1.5rem;
+    color: white;
+}
+
+.butoes {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    margin-top: 50px;
+}
+
+.butoes button {
+    padding: 30px;
+    font-size: 1.2rem;
+    border: none;
+    border-radius: 15px;
+    background-color: #CF4647;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.butoes button:hover {
+    transform: scale(1.1);
+}
