@@ -1,5 +1,6 @@
 import './hero.css';
 import React, { useState, useEffect } from 'react';
+import { Dialog, DialogTitle, DialogContent, DialogActions, Button } from '@mui/material';
 
 function Hero() {
   const [heroes, setHeroes] = useState([]);
@@ -18,39 +19,38 @@ function Hero() {
     fetchHeroes();
   }, []);
 
-  const handleHeroClick = (heroId) => {
-    setSelectedHero(selectedHero === heroId ? null : heroId);
+  const handleHeroClick = (hero) => {
+    setSelectedHero(hero);
+  };
+
+  const handleClose = () => {
+    setSelectedHero(null);
+  };
+
+  const handleEditHero = () => {
+    // Implementar a lógica de edição do herói
+    console.log('Editar herói:', selectedHero);
+  };
+
+  const handleDeleteHero = () => {
+    // Implementar a lógica de exclusão do herói
+    console.log('Deletar herói:', selectedHero);
   };
 
   return (
     <div className="Hero">
       <div className="mainPage">
         <h1>Heróis</h1>
-        <p>Nesta página é possível fazer adição, remoção, atualização e consulta de heróis no banco de dados.</p>
+        <p className='textoHeroPage'>Nesta página é possível fazer adição, remoção, atualização e consulta de heróis no banco de dados.</p>
         <div className="hero-container">
           {heroes.length > 0 ? (
             heroes.map((hero) => (
               <div
                 key={hero.codigo_heroi}
-                className={`hero-item ${selectedHero === hero.codigo_heroi ? 'expanded' : ''}`}
-                onClick={() => handleHeroClick(hero.codigo_heroi)}
+                className="hero-item"
+                onClick={() => handleHeroClick(hero)}
               >
                 <div className="hero-name">{hero.nome_heroi}</div>
-                {selectedHero === hero.codigo_heroi && (
-                  <div className="hero-details">
-                    <p>Nome Real: {hero.nome_real}</p>
-                    <p>Sexo: {hero.sexo}</p>
-                    <p>Altura: {hero.altura_heroi} m</p>
-                    <p>Peso: {hero.peso_heroi} kg</p>
-                    <p>Local de Nascimento: {hero.local_nascimento}</p>
-                    <p>Poderes: {hero.poderes}</p>
-                    <p>Nível de Força: {hero.nivel_forca}</p>
-                    <p>Popularidade: {hero.popularidade}</p>
-                    <p>Status: {hero.status}</p>
-                    <p>Histórico de Batalhas: {hero.historico_batalhas}</p>
-                    <p>Data de Nascimento: {new Date(hero.data_nascimento).toLocaleDateString()}</p>
-                  </div>
-                )}
               </div>
             ))
           ) : (
@@ -58,6 +58,32 @@ function Hero() {
           )}
         </div>
       </div>
+
+      {/* Dialog para mostrar os detalhes do herói */}
+      {selectedHero && (
+        <Dialog className='dialog' open={Boolean(selectedHero)} onClose={handleClose}>
+          <DialogTitle className='titleDialog'>Detalhes do Herói</DialogTitle>
+          <DialogContent className='conteudoDialog'>
+            <p><strong>Nome Real: </strong>{selectedHero.nome_real}</p>
+            <p><strong>Nome de Herói: </strong>{selectedHero.nome_heroi}</p>
+            <p><strong>Sexo:</strong> {selectedHero.sexo}</p>
+            <p><strong>Altura:</strong> {selectedHero.altura_heroi} m</p>
+            <p><strong>Peso:</strong> {selectedHero.peso_heroi} kg</p>
+            <p><strong>Local de Nascimento:</strong> {selectedHero.local_nascimento}</p>
+            <p><strong>Poderes:</strong> {selectedHero.poderes}</p>
+            <p><strong>Nível de Força:</strong> {selectedHero.nivel_forca}</p>
+            <p><strong>Popularidade:</strong> {selectedHero.popularidade}</p>
+            <p><strong>Status:</strong> {selectedHero.status}</p>
+            <p><strong>Histórico de Batalhas:</strong> {selectedHero.historico_batalhas}</p>
+            <p><strong>Data de Nascimento:</strong> {new Date(selectedHero.data_nascimento).toLocaleDateString()}</p>
+          </DialogContent>
+          <DialogActions className='butoesDialog'>
+            <Button onClick={handleClose} sx={{ color: 'white' }}>Fechar</Button>
+            <Button onClick={handleEditHero} sx={{ color: 'white' }}>Editar</Button>
+            <Button onClick={handleDeleteHero} sx={{ color: 'white' }}>Deletar</Button>
+          </DialogActions>
+        </Dialog>
+      )}
     </div>
   );
 }
