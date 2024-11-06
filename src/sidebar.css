@@ -65,6 +65,7 @@ img:hover {
 .sidebar.expanded .sidebar-menu li span {
   display: inline;
   font-size: 1.5rem;
+  cursor: pointer;
 }
 
 .abrir-menu {

@@ -54,7 +54,7 @@ function Hero() {
               </div>
             ))
           ) : (
-            <p>Nenhum herói encontrado.</p>
+            <p className='nadaEncontrado'>Nenhum herói encontrado.</p>
           )}
         </div>
       </div>

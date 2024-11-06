@@ -27,7 +27,7 @@ const Sidebar = () => {
         </li>
         <li onClick={goToHeroesPage}>
           <img src="/assets/superhero.png" alt="Heróis" />
-          {isExpanded && <span>Heróis</span>}
+          {isExpanded && <span onClick={goToHeroesPage}>Heróis</span>}
         </li>
         <li>
           <img src="/assets/target.png" alt="Missões" />
