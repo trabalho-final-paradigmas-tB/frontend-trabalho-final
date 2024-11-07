@@ -1,0 +1,58 @@
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.App {
+    display: flex;
+    justify-content: center;
+    height: 100vh;
+}
+
+h1 {
+    font-size: 64px;
+    margin-bottom: 50px;
+}
+
+.Simulador {
+    flex-direction: column;
+    align-items: center;
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+}
+
+.left-fighter, .right-fighter {
+    display: flex;
+    flex-direction: column;
+    font-size: 28px;
+}
+
+.left-fighter button, .right-fighter button {
+    padding: 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 10px;
+}
+
+.left-fighter span, .right-fighter span {
+    color: white;
+}
+
+.fighter-select {
+    background-color: #CF4647;
+    color: white;
+    font-size: 20px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
+    padding: 20px;
+}
+
+.battle-button button {
+    align-self: center;
+}
