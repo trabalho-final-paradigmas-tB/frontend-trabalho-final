@@ -13,7 +13,7 @@ function Simulador() {
                             <option>Batman</option>
                             <option>Superman</option>
                         </select>
-                        <span className="info-icon">i</span>
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px' }}/> 
                     </div>
                     <div className="right-fighter">
                         <span>Escolha o lutador 2:</span>
@@ -21,7 +21,7 @@ function Simulador() {
                             <option>SuperTutu</option>
                             <option>Wonder Woman</option>
                         </select>
-                        <span className="info-icon">i</span>
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px' }}/> 
                     </div>
                 </div>
                 <button className="battle-button">Batalhar</button>

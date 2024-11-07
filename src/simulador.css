@@ -66,4 +66,13 @@ h1 {
     border-radius: 10px;
     cursor: pointer;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s;
+}
+
+.battle-button:hover {
+    transform: scale(1.1);
+}
+
+.infoIcon {
+    margin-top: 20px;
 }

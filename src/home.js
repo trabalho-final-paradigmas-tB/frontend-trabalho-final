@@ -7,6 +7,9 @@ const Home = () => {
   const goToHeroesPage = () => {
     navigate('/heroi');
   };
+  const goToSimulatorPage = () => {
+    navigate('/simulador');
+  }
 
   return (
     <div className='Home'>
@@ -20,7 +23,7 @@ const Home = () => {
         <button onClick={goToHeroesPage}>Heróis</button>
         <button>Missões</button>
         <button>Crimes</button>
-        <button>Simulador</button>
+        <button onClick={goToSimulatorPage}>Simulador</button>
       </div>
     </div>
   );
