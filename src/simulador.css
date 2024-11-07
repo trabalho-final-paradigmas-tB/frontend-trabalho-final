@@ -54,6 +54,7 @@ h1 {
     border-radius: 5px;
     padding: 20px;
     width: 200px;
+    cursor: pointer;
 }
 
 .battle-button {
