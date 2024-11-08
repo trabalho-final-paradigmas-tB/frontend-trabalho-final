@@ -1,4 +1,3 @@
-import './App.css';
 import Sidebar from './sidebar';
 import AppRoutes from './AppRoutes';
 

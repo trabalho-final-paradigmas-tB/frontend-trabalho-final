@@ -62,6 +62,13 @@ img:hover {
   display: none;
 }
 
+.sidebar-menu li {
+  display: flex;
+  flex-direction: row;
+  align-self: flex-start;
+  gap: 30px;
+}
+
 .sidebar.expanded .sidebar-menu li span {
   display: inline;
   font-size: 1.5rem;
