@@ -1,11 +1,13 @@
 import './hero.css';
 import React, { useState, useEffect } from 'react';
-import { Dialog, DialogTitle, DialogContent, DialogActions, Button, TextField } from '@mui/material';
+import { Drawer, Button, TextField, IconButton, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import HeroDetails from './HeroDetais.js';
 
 function Hero() {
   const [heroes, setHeroes] = useState([]);
   const [selectedHero, setSelectedHero] = useState(null);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const [newHero, setNewHero] = useState({
     nome_real: '',
     nome_heroi: '',
@@ -22,33 +24,39 @@ function Hero() {
   });
 
   useEffect(() => {
-    const fetchHeroes = async () => {
-      try {
-        const response = await fetch('/heroi');
-        const data = await response.json();
-        setHeroes(data);
-      } catch (error) {
-        console.error('Erro ao buscar heróis:', error);
-      }
-    };
     fetchHeroes();
   }, []);
 
-  const handleHeroClick = (hero) => {
-    setSelectedHero(hero);
-    setOpenDialog(true);
+  const fetchHeroes = async () => {
+    try {
+      const response = await fetch('/heroi');
+      const data = await response.json();
+      setHeroes(data);
+    } catch (error) {
+      console.error('Erro ao buscar heróis:', error);
+    }
   };
 
-  const handleClose = () => {
+  const handleHeroClick = (hero) => {
+    setSelectedHero(hero);
+    setDrawerOpen(true);
+  };
+
+  const handleDrawerClose = () => {
     setSelectedHero(null);
-    setOpenDialog(false);
+    setDrawerOpen(false);
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewHero((prevHero) => ({
       ...prevHero,
-      [name]: name === 'altura_heroi' || name === 'peso_heroi' ? parseFloat(value) || 0 : value,
+      [name]: 
+        name === 'altura_heroi' || name === 'peso_heroi' 
+          ? parseFloat(value)
+          : name === 'nivel_forca' || name === 'popularidade'
+          ? parseInt(value, 10)
+          : value,
     }));
   };
 
@@ -61,137 +69,114 @@ function Hero() {
         },
         body: JSON.stringify(newHero),
       });
-  
-      if (!response.ok) {
-        throw new Error('Erro ao inserir herói');
+
+      if (response.ok) {
+        fetchHeroes();
+        setNewHero({
+          nome_real: '',
+          nome_heroi: '',
+          sexo: '',
+          altura_heroi: '',
+          peso_heroi: '',
+          local_nascimento: '',
+          poderes: '',
+          nivel_forca: '',
+          popularidade: '',
+          status: '',
+          historico_batalhas: '',
+          data_nascimento: '',
+        });
+        setDrawerOpen(false);
+      } else {
+        console.error('Erro ao inserir o herói');
       }
-      
-      // Atualize a lista de heróis
-      const newHeroData = await response.json();
-      setHeroes((prevHeroes) => [...prevHeroes, newHeroData]);
-      handleClose();
     } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const handleEditHero = async () => {
-    try {
-      const response = await fetch(`/heroi/${selectedHero.codigo_heroi}`, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(selectedHero),
-      });
-
-      if (!response.ok) {
-        throw new Error('Erro ao editar herói');
-      }
-
-      const updatedHero = await response.json();
-      setHeroes((prevHeroes) =>
-        prevHeroes.map((hero) =>
-          hero.codigo_heroi === updatedHero.codigo_heroi ? updatedHero : hero
-        )
-      );
-      handleClose();
-    } catch (error) {
-      console.error(error.message);
-    }
-  };
-
-  const handleDeleteHero = async () => {
-    if (!selectedHero || !selectedHero.codigo_heroi) {
-      console.error("ID inválido para exclusão");
-      return;
-    }
-    try {
-      const response = await fetch(`/heroi/${selectedHero.codigo_heroi}`, {
-        method: 'DELETE',
-      });
-      if (!response.ok) {
-        throw new Error('Erro ao deletar herói');
-      }
-      setHeroes(heroes.filter(hero => hero.codigo_heroi !== selectedHero.codigo_heroi));
-      handleClose();
-    } catch (error) {
-      console.error(error.message);
+      console.error('Erro ao inserir o herói:', error);
     }
   };
 
   return (
     <div className="Hero">
-      <div className="mainPage">
-        <h1>Heróis</h1>
-        <p className='textoHeroPage'>Nesta página é possível fazer adição, remoção, atualização e consulta de heróis no banco de dados.</p>
-        <button className='botaoAdd' onClick={() => setOpenDialog(true)}>Adicionar Herói</button>
-        <div className="hero-container">
-          <p className='pContainerHeroi'>Lista dos heróis registrados</p>
-          {heroes.length > 0 ? (
-            heroes.map((hero) => (
-              <div
-                key={hero.codigo_heroi}
-                className="hero-item"
-                onClick={() => handleHeroClick(hero)}
-              >
-                <div className="hero-name">{hero.nome_heroi}</div>
-              </div>
-            ))
-          ) : (
-            <p className='nadaEncontrado'>Nenhum herói encontrado.</p>
-          )}
-        </div>
+      <h1>Heróis</h1>
+      <Button variant="contained" color="primary" onClick={() => setDrawerOpen(true)}>
+        Adicionar Herói
+      </Button>
+      <div className="hero-container">
+        <p className="pContainerHeroi">Lista dos heróis registrados</p>
+        {heroes.length > 0 ? (
+          heroes.map((hero) => (
+            <div
+              key={hero.codigo_heroi}
+              className="hero-item"
+              onClick={() => handleHeroClick(hero)}
+            >
+              <div className="hero-name">{hero.nome_heroi}</div>
+            </div>
+          ))
+        ) : (
+          <p className="nadaEncontrado">Nenhum herói encontrado.</p>
+        )}
       </div>
 
-      <Dialog className='dialog' open={openDialog} onClose={handleClose}>
-        <DialogTitle className='titleDialog'>
-          {selectedHero ? `Informações do Herói: ${selectedHero.nome_heroi}` : 'Adicionar Novo Herói'}
-        </DialogTitle>
-        <DialogContent className='conteudoDialog'>
+      <Drawer anchor="right" open={drawerOpen} onClose={handleDrawerClose}>
+        <div className='draw' style={{ width: '700px', padding: '50px' }}>
+          <IconButton onClick={handleDrawerClose} style={{ marginBottom: '20px' }}>
+            <CloseIcon />
+          </IconButton>
           {selectedHero ? (
-            <div>
-              <p><strong>Nome Real:</strong> {selectedHero.nome_real}</p>
-              <p><strong>Sexo:</strong> {selectedHero.sexo}</p>
-              <p><strong>Altura:</strong> {selectedHero.altura_heroi} m</p>
-              <p><strong>Peso:</strong> {selectedHero.peso_heroi} kg</p>
-              <p><strong>Local de Nascimento:</strong> {selectedHero.local_nascimento}</p>
-              <p><strong>Poderes:</strong> {selectedHero.poderes}</p>
-              <p><strong>Nível de Força:</strong> {selectedHero.nivel_forca}</p>
-              <p><strong>Popularidade:</strong> {selectedHero.popularidade}</p>
-              <p><strong>Status:</strong> {selectedHero.status}</p>
-              <p><strong>Histórico de Batalhas:</strong> {selectedHero.historico_batalhas}</p>
-              <p><strong>Data de Nascimento:</strong> {selectedHero.data_nascimento}</p>
-            </div>
+            <HeroDetails hero={selectedHero} onClose={handleDrawerClose} />
           ) : (
             <>
-              <TextField label="Nome Real" name="nome_real" value={newHero.nome_real} onChange={handleInputChange} fullWidth />
-              <TextField label="Nome de Herói" name="nome_heroi" value={newHero.nome_heroi} onChange={handleInputChange} fullWidth />
-              <TextField label="Sexo" name="sexo" value={newHero.sexo} onChange={handleInputChange} fullWidth />
-              <TextField label="Altura (m)" name="altura_heroi" value={newHero.altura_heroi} onChange={handleInputChange} type="number" fullWidth />
-              <TextField label="Peso (kg)" name="peso_heroi" value={newHero.peso_heroi} onChange={handleInputChange} type="number" fullWidth />
-              <TextField label="Local de Nascimento" name="local_nascimento" value={newHero.local_nascimento} onChange={handleInputChange} fullWidth />
-              <TextField label="Poderes" name="poderes" value={newHero.poderes} onChange={handleInputChange} fullWidth />
-              <TextField label="Nível de Força" name="nivel_forca" value={newHero.nivel_forca} onChange={handleInputChange} fullWidth />
-              <TextField label="Popularidade" name="popularidade" value={newHero.popularidade} onChange={handleInputChange} fullWidth />
-              <TextField label="Status" name="status" value={newHero.status} onChange={handleInputChange} fullWidth />
-              <TextField label="Histórico de Batalhas" name="historico_batalhas" value={newHero.historico_batalhas} onChange={handleInputChange} fullWidth />
-              <TextField label="Data de Nascimento" name="data_nascimento" value={newHero.data_nascimento} onChange={handleInputChange} type="date" fullWidth />
+              <h2>Adicionar Novo Herói</h2>
+              <div className='seletoresInserir'>
+                <TextField label="Nome Real" name="nome_real" value={newHero.nome_real} onChange={handleInputChange} fullWidth className="text-field-spacing"/>
+                <TextField label="Nome de Herói" name="nome_heroi" value={newHero.nome_heroi} onChange={handleInputChange} fullWidth className="text-field-spacing"/>
+                
+                <FormControl fullWidth className="text-field-spacing">
+                  <InputLabel>Sexo</InputLabel>
+                  <Select
+                    name="sexo"
+                    value={newHero.sexo}
+                    onChange={handleInputChange}
+                    label="Sexo"
+                  >
+                    <MenuItem value="M">Masculino</MenuItem>
+                    <MenuItem value="F">Feminino</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <TextField label="Altura (cm)" name="altura_heroi" value={newHero.altura_heroi} onChange={handleInputChange} type='number' fullWidth className="text-field-spacing"/>
+                <TextField label="Peso (kg)" name="peso_heroi" value={newHero.peso_heroi} onChange={handleInputChange} type="number" fullWidth className="text-field-spacing"/>
+                <TextField label="Local de Nascimento" name="local_nascimento" value={newHero.local_nascimento} onChange={handleInputChange} fullWidth className="text-field-spacing"/>
+                <TextField label="Poderes" name="poderes" value={newHero.poderes} onChange={handleInputChange} fullWidth className="text-field-spacing"/>
+                <TextField label="Nível de Força" name="nivel_forca" value={newHero.nivel_forca} onChange={handleInputChange} type='number' fullWidth className="text-field-spacing"/>
+                <TextField label="Popularidade" name="popularidade" value={newHero.popularidade} onChange={handleInputChange} type='number' fullWidth className="text-field-spacing"/>
+
+                <FormControl fullWidth className="text-field-spacing">
+                  <InputLabel>Status</InputLabel>
+                  <Select
+                    name="status"
+                    value={newHero.status}
+                    onChange={handleInputChange}
+                    label="Status"
+                  >
+                    <MenuItem value="Ativo">Ativo</MenuItem>
+                    <MenuItem value="Inativo">Inativo</MenuItem>
+                    <MenuItem value="Banido">Banido</MenuItem>
+                  </Select>
+                </FormControl>
+
+                <TextField label="Histórico de Batalhas" name="historico_batalhas" value={newHero.historico_batalhas} onChange={handleInputChange} fullWidth className="text-field-spacing"/>
+                <TextField label="Data de Nascimento" name="data_nascimento" value={newHero.data_nascimento} onChange={handleInputChange} InputLabelProps={{ shrink: true }} type="date" fullWidth className="text-field-spacing"/>
+                
+                <Button variant="contained" color="primary" onClick={handleInsertHero} fullWidth style={{ marginTop: '20px' }}>
+                  Inserir
+                </Button>
+              </div>
             </>
           )}
-        </DialogContent>
-        <DialogActions className='butoesDialog'>
-          <Button onClick={handleClose} sx={{ color: 'white' }}>Cancelar</Button>
-          {selectedHero ? (
-            <>
-              <Button onClick={handleEditHero} sx={{ color: 'white' }}>Editar</Button>
-              <Button onClick={handleDeleteHero} sx={{ color: 'white' }}>Deletar</Button>
-            </>
-          ) : (
-            <Button onClick={handleInsertHero} sx={{ color: 'white' }}>Inserir</Button>
-          )}
-        </DialogActions>
-      </Dialog>
+        </div>
+      </Drawer>
     </div>
   );
 }
