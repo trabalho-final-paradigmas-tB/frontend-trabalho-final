@@ -22,6 +22,10 @@ const Sidebar = () => {
     navigate('/simulador');
   }
 
+  const goToMissoesPage = () => {
+    navigate('/missoes');
+  }
+
   return (
     <div className={`sidebar ${isExpanded ? 'expanded' : ''}`}>
       <img src="/assets/logoTheBoys.png" alt="The Boys Logo" className="sidebar-logo" onClick={goToHomePage}/>
@@ -35,7 +39,7 @@ const Sidebar = () => {
         </li>
         <li>
           <img src="/assets/target.png" alt="Missões" />
-          {isExpanded && <span>Missões</span>}
+          {isExpanded && <span onClick={goToMissoesPage}>Missões</span>}
         </li>
         <li>
           <img src="/assets/prisoner.png" alt="Crimes" />

@@ -11,6 +11,9 @@ const Home = () => {
   const goToSimulatorPage = () => {
     navigate('/simulador');
   }
+  const goToMissoesPage = () => {
+    navigate('/missoes');
+  }
 
   return (
     <div className='Home'>
@@ -21,7 +24,7 @@ const Home = () => {
       <div className='butoesMainpage'>
         <p>Clique em um dos botões</p>
         <button onClick={goToHeroesPage}>Heróis</button>
-        <button>Missões</button>
+        <button onClick={goToMissoesPage}>Missões</button>
         <button>Crimes</button>
         <button onClick={goToSimulatorPage}>Simulador</button>
       </div>
