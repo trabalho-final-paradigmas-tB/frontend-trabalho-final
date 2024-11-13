@@ -98,7 +98,8 @@ function Hero() {
   return (
     <div className="Hero">
       <h1>Heróis</h1>
-      <Button variant="contained" color="primary" onClick={() => setDrawerOpen(true)}>
+      <p className='infoPage'>Aqui é possível consultar, adicionar, remover ou atualizar heróis do banco de dados</p>
+      <Button className='butaoAdd' variant="contained" color="primary" onClick={() => setDrawerOpen(true)}>
         Adicionar Herói
       </Button>
       <div className="hero-container">

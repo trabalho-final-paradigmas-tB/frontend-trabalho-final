@@ -1,0 +1,35 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+:root {
+    --fonte-poppins: "Poppins", sans-serif;
+}
+
+.deleteButton {
+    padding: 20px;
+    font-size: 16px;
+    margin-top: 20px;
+    border: none;
+    background-color: #CF4647;
+    color: white;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.deleteButton:hover {
+    transform: scale(1.05);
+}
+
+.titleHero {
+    font-size: 2rem;
+    text-align: start;
+    font-family: var(--fonte-poppins);
+    color: black;
+}
+
+.infoHero {
+    font-size: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
