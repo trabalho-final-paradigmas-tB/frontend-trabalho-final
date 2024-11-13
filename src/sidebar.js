@@ -23,7 +23,7 @@ const Sidebar = () => {
   }
 
   const goToMissoesPage = () => {
-    navigate('/missoes');
+    navigate('/missao');
   }
 
   return (

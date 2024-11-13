@@ -11,7 +11,7 @@ const AppRoutes = () => {
       <Route path="/" element={<Home />} /> {/* Página inicial */}
       <Route path="/heroi" element={<Hero />} />
       <Route path="/simulador" element={<Simulador/>} />
-      <Route path="/missoes" element={<Missoes/>} />
+      <Route path="/missao" element={<Missoes/>} />
       {/* Defina outras rotas aqui */}
     </Routes>
   );

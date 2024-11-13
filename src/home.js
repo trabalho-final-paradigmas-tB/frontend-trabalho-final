@@ -12,7 +12,7 @@ const Home = () => {
     navigate('/simulador');
   }
   const goToMissoesPage = () => {
-    navigate('/missoes');
+    navigate('/missao');
   }
 
   return (
