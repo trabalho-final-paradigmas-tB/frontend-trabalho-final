@@ -4,6 +4,7 @@ import Hero from './hero'; // Ajuste o caminho conforme necessário
 import Home from './home'; // Importe a nova página inicial
 import Simulador from './simulador'
 import Missoes from './missoes';
+import Crimes from './crimes'
 
 const AppRoutes = () => {
   return (
@@ -12,6 +13,7 @@ const AppRoutes = () => {
       <Route path="/heroi" element={<Hero />} />
       <Route path="/simulador" element={<Simulador/>} />
       <Route path="/missao" element={<Missoes/>} />
+      <Route path="/crimes" element={<Crimes/>} />
       {/* Defina outras rotas aqui */}
     </Routes>
   );

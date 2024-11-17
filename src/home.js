@@ -14,6 +14,9 @@ const Home = () => {
   const goToMissoesPage = () => {
     navigate('/missao');
   }
+  const goToCrimesPage = () => {
+    navigate('/crimes');
+  }
 
   return (
     <div className='Home'>
@@ -25,7 +28,7 @@ const Home = () => {
         <p>Clique em um dos botões</p>
         <button onClick={goToHeroesPage}>Heróis</button>
         <button onClick={goToMissoesPage}>Missões</button>
-        <button>Crimes</button>
+        <button onClick={goToCrimesPage}>Crimes</button>
         <button onClick={goToSimulatorPage}>Simulador</button>
       </div>
     </div>
