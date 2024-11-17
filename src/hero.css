@@ -154,3 +154,14 @@ h1 {
     flex-direction: column;
     gap: 20px;
 }
+
+.filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 20px;
+    background-color: #F5D061; /* Fundo escuro */
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px;
+}
