@@ -1,7 +1,23 @@
-import React from 'react';
-import './heroDetails.css'
+import React, { useState } from "react";
+import "./heroDetails.css";
 
 function HeroDetails({ hero }) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedHero, setEditedHero] = useState({ ...hero });
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditedHero({ ...editedHero, [name]: value });
+  };
+
+  const formattedHero = {
+    ...editedHero,
+    altura_heroi: parseFloat(editedHero.altura_heroi), // Converter para float
+    peso_heroi: parseFloat(editedHero.peso_heroi),     // Converter para float
+    nivel_forca: parseInt(editedHero.nivel_forca, 10), // Converter para inteiro
+    popularidade: parseInt(editedHero.popularidade, 10), // Converter para inteiro
+  };
+
   const handleDelete = async () => {
     try {
       const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
@@ -20,30 +36,173 @@ function HeroDetails({ hero }) {
     }
   };
 
+  const handleEdit = async () => {
+    try {
+      const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedHero),
+      });
+
+      if (response.ok) {
+        alert(`Herói ${editedHero.nome_heroi} atualizado com sucesso.`);
+        setIsEditing(false);
+        window.location.reload(); // Atualiza a página
+      } else {
+        alert("Erro ao atualizar o herói.");
+      }
+    } catch (error) {
+      console.error("Erro na requisição PUT:", error);
+      alert("Erro ao tentar atualizar o herói.");
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
-    const day = String(date.getDate()).padStart(2, '0');
-    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, "0");
     const year = date.getFullYear();
     return `${day}/${month}/${year}`;
   };
 
   return (
-    <div className='infoHero'>
-      <h1 className='titleHero'>{hero.nome_heroi}</h1>
-      <p><strong>Nome Real:</strong> {hero.nome_real}</p>
-      <p><strong>Sexo:</strong> {hero.sexo}</p>
-      <p><strong>Altura:</strong> {hero.altura_heroi} cm</p>
-      <p><strong>Peso:</strong> {hero.peso_heroi} kg</p>
-      <p><strong>Local de Nascimento:</strong> {hero.local_nascimento}</p>
-      <p><strong>Poderes:</strong> {hero.poderes}</p>
-      <p><strong>Nível de Força:</strong> {hero.nivel_forca}</p>
-      <p><strong>Popularidade:</strong> {hero.popularidade}</p>
-      <p><strong>Status:</strong> {hero.status}</p>
-      <p><strong>Histórico de Batalhas:</strong> {hero.historico_batalhas}</p>
-      <p><strong>Data de Nascimento:</strong> {formatDate(hero.data_nascimento)}</p>
-      <button className='deleteButton' onClick={handleDelete}>Deletar Herói</button>
-      <button className='editButton'>Editar Herói</button>
+    <div className="infoHero">
+      <h1 className="titleHero">{isEditing ? "Editar Herói" : hero.nome_heroi}</h1>
+      {isEditing ? (
+        <form>
+          <label>
+            Nome Real:
+            <input
+              type="text"
+              name="nome_real"
+              value={editedHero.nome_real}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Nome Herói:
+            <input
+              type="text"
+              name="nome_heroi"
+              value={editedHero.nome_heroi}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Sexo:
+            <input
+              type="text"
+              name="sexo"
+              value={editedHero.sexo}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Altura (cm):
+            <input
+              type="number"
+              name="altura_heroi"
+              value={editedHero.altura_heroi}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Peso (kg):
+            <input
+              type="number"
+              name="peso_heroi"
+              value={editedHero.peso_heroi}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Local de Nascimento:
+            <input
+              type="text"
+              name="local_nascimento"
+              value={editedHero.local_nascimento}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Poderes:
+            <input
+              type="text"
+              name="poderes"
+              value={editedHero.poderes}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Nível de Força:
+            <input
+              type="number"
+              name="nivel_forca"
+              value={editedHero.nivel_forca}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Popularidade:
+            <input
+              type="number"
+              name="popularidade"
+              value={editedHero.popularidade}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Status:
+            <input
+              type="text"
+              name="status"
+              value={editedHero.status}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Histórico de Batalhas:
+            <textarea
+              name="historico_batalhas"
+              value={editedHero.historico_batalhas}
+              onChange={handleInputChange}
+            />
+          </label>
+          <label>
+            Data de Nascimento:
+            <input
+              type="date"
+              name="data_nascimento"
+              value={editedHero.data_nascimento}
+              onChange={handleInputChange}
+            />
+          </label>
+          <button type="button" onClick={handleEdit}>
+            Salvar
+          </button>
+          <button type="button" onClick={() => setIsEditing(false)}>
+            Cancelar
+          </button>
+        </form>
+      ) : (
+        <>
+          <p><strong>Nome Real:</strong> {hero.nome_real}</p>
+          <p><strong>Sexo:</strong> {hero.sexo}</p>
+          <p><strong>Altura:</strong> {hero.altura_heroi} cm</p>
+          <p><strong>Peso:</strong> {hero.peso_heroi} kg</p>
+          <p><strong>Local de Nascimento:</strong> {hero.local_nascimento}</p>
+          <p><strong>Poderes:</strong> {hero.poderes}</p>
+          <p><strong>Nível de Força:</strong> {hero.nivel_forca}</p>
+          <p><strong>Popularidade:</strong> {hero.popularidade}</p>
+          <p><strong>Status:</strong> {hero.status}</p>
+          <p><strong>Histórico de Batalhas:</strong> {hero.historico_batalhas}</p>
+          <p><strong>Data de Nascimento:</strong> {formatDate(hero.data_nascimento)}</p>
+          <button className="deleteButton" onClick={handleDelete}>Deletar Herói</button>
+          <button className="editButton" onClick={() => setIsEditing(true)}>Editar Herói</button>
+        </>
+      )}
     </div>
   );
 }

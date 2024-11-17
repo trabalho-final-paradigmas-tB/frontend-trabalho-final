@@ -20,6 +20,22 @@
     transform: scale(1.05);
 }
 
+.editButton {
+    padding: 20px;
+    font-size: 16px;
+    margin-top: 20px;
+    border: none;
+    background-color: #CF4647;
+    color: white;
+    border-radius: 10px;
+    transition: transform 0.3s;
+    cursor: pointer;
+}
+
+.editButton:hover {
+    transform: scale(1.05);
+}
+
 .titleHero {
     font-size: 2rem;
     text-align: start;
