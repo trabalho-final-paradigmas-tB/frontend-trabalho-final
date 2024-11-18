@@ -62,6 +62,24 @@ function Crimes() {
         }
     };
 
+    // Função para ocultar um crime
+    const ocultarCrime = async (id) => {
+        try {
+            const response = await fetch(`/crimes/${id}`, {
+                method: "PATCH",
+            });
+
+            if (!response.ok) {
+                throw new Error(`Erro HTTP: ${response.status}`);
+            }
+
+            alert("Crime ocultado com sucesso!");
+            fetchCrimes(); // Atualiza a lista de crimes
+        } catch (err) {
+            alert("Erro ao ocultar crime: " + err.message);
+        }
+    };
+
     return (
         <div className="Crimes">
             <h1>Crimes</h1>
@@ -117,9 +135,7 @@ function Crimes() {
                                     onChange={(e) =>
                                         setNovoCrime({
                                             ...novoCrime,
-                                            heroi_responsavel: e.target.value
-                                                ? parseInt(e.target.value, 10)
-                                                : null,
+                                            heroi_responsavel: e.target.value || "", // Mantém o valor como string
                                         })
                                     }
                                 />
@@ -148,19 +164,24 @@ function Crimes() {
             {loading && <p>Carregando crimes...</p>}
             {error && <p style={{ color: "red" }}>{error}</p>}
 
-            {/* Renderiza os crimes recebidos */}
+            {/* Verificação de se crimes é null ou undefined */}
             <div className="crime-container">
-                {!loading &&
-                    !error &&
-                    crimes.map((crime) => (
-                        <div key={crime.id} className="crime-card">
-                            <h2>{crime.nome_crime}</h2>
-                            <p><strong>Descrição:</strong> {crime.descricao}</p>
-                            <p><strong>Data:</strong> {new Date(crime.data_crime).toLocaleDateString()}</p>
-                            <p><strong>Id do herói responsável:</strong> {crime.heroi_responsavel || "Nenhum"}</p>
-                            <p><strong>Severidade:</strong> {crime.severidade}</p>
-                        </div>
-                    ))}
+                {!loading && !error && (
+                    crimes && crimes.length > 0 ? (
+                        crimes.map((crime) => (
+                            <div key={crime.id} className="crime-card">
+                                <h2>{crime.nome_crime}</h2>
+                                <p><strong>Descrição:</strong> {crime.descricao}</p>
+                                <p><strong>Data:</strong> {new Date(crime.data_crime).toLocaleDateString()}</p>
+                                <p><strong>Id do herói responsável:</strong> {crime.heroi_responsavel || "Nenhum"}</p>
+                                <p><strong>Severidade:</strong> {crime.severidade}</p>
+                                <button onClick={() => ocultarCrime(crime.id)}>Ocultar</button>
+                            </div>
+                        ))
+                    ) : (
+                        <p>Nenhum crime encontrado.</p>
+                    )
+                )}
             </div>
         </div>
     );

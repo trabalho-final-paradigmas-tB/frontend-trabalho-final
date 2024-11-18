@@ -125,6 +125,7 @@ function Hero() {
       <h1>Heróis</h1>
       <p className='infoPage'>Aqui é possível consultar, adicionar, remover ou atualizar heróis do banco de dados</p>
       <div className="filters">
+        <p>Filtros:</p>
         <TextField
           label="Buscar por Nome"
           name="nome"

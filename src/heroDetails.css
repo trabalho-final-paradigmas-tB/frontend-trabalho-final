@@ -49,3 +49,41 @@
     flex-direction: column;
     gap: 10px;
 }
+
+.editForms {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: start;
+}
+
+.editForms input, textarea {
+    margin-left: 20px;
+    width: 100%;
+    padding: 15px;
+    border-radius: 7px;
+    border: 1px solid black;
+    cursor: pointer;
+}
+
+.butoesEdit {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-self: center;
+    margin-top: 15px;
+}
+
+.butoesEdit button {
+    padding: 10px  20px;
+    border: none;
+    background-color: #CF4647;
+    color: white;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform 0.3s;
+}
+
+.butoesEdit button:hover {
+    transform: scale(1.05);
+}
