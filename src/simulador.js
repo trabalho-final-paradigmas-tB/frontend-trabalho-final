@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './simulador.css';
+import { useNavigate } from 'react-router-dom';
 
 function Simulador() {
     const [herois, setHerois] = useState([]);
@@ -8,6 +9,11 @@ function Simulador() {
     const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedHeroiID1, setSelectedHeroiID1] = useState(null);
     const [selectedHeroiID2, setSelectedHeroiID2] = useState(null);
+
+    const navigate = useNavigate();
+    const goToResult = () => {
+        navigate('/resultado');
+      };
 
     useEffect(() => {
         async function fetchHerois() {
@@ -25,22 +31,23 @@ function Simulador() {
         fetchHerois();
     }, []);
 
-   /* const handleInfoClick = async () => {
-        if (selectedHeroiID) {5
+   const handleInfoClick = async () => {
+        if (selectedHeroiID) {
             try {
-                const response = await fetch(`/heroi?id=${selectedHeroiID}`);
+                const response = await fetch(`/heroiid?id=${selectedHeroiID}`);
                 if (!response.ok) {
                     throw new Error("Erro ao buscar detalhes do herói");
                 }
                 const data = await response.json();
                 setHeroiDetails(data);
+                console.log(data)
                 setDialogOpen(true);
             } catch (error) {
                 console.error(error.message);
             }
         }
     };
-    */
+
     const handleBatalha = async () => {
         if (selectedHeroiID1 && selectedHeroiID2) {
             try {
@@ -78,6 +85,7 @@ function Simulador() {
 
                 const data = await response.json();
                 console.log(data);
+                goToResult();
             } catch (error) {
                 console.error(error.message);
             }
@@ -106,7 +114,7 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} /*onClick={handleInfoClick}*/ /> 
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={handleInfoClick} /> 
                     </div>
                     <div className="right-fighter">
                         <span>Escolha o lutador 2:</span>
@@ -118,12 +126,11 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} /*onClick={handleInfoClick}*//> 
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={handleInfoClick}/> 
                     </div>
                 </div>
                 <button className="battle-button" onClick={handleBatalha}>Batalhar</button>
 
-                {/* Dialog para exibir detalhes do herói */}
                 <dialog open={dialogOpen} className="heroi-dialog">
                     {heroiDetails ? (
                         <div>
