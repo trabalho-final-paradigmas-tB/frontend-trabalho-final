@@ -11,9 +11,6 @@ function Simulador() {
     const [selectedHeroiID2, setSelectedHeroiID2] = useState(null);
 
     const navigate = useNavigate();
-    const goToResult = () => {
-        navigate('/resultado');
-      };
 
     useEffect(() => {
         async function fetchHerois() {
@@ -31,20 +28,17 @@ function Simulador() {
         fetchHerois();
     }, []);
 
-   const handleInfoClick = async () => {
-        if (selectedHeroiID) {
-            try {
-                const response = await fetch(`/heroiid?id=${selectedHeroiID}`);
-                if (!response.ok) {
-                    throw new Error("Erro ao buscar detalhes do herói");
-                }
-                const data = await response.json();
-                setHeroiDetails(data);
-                console.log(data)
-                setDialogOpen(true);
-            } catch (error) {
-                console.error(error.message);
+    const handleInfoClick = async (id) => {
+        try {
+            const response = await fetch(`/heroiid?id=${id}`);
+            if (!response.ok) {
+                throw new Error("Erro ao buscar detalhes do herói");
             }
+            const data = await response.json();
+            setHeroiDetails(data);
+            setDialogOpen(true);
+        } catch (error) {
+            console.error(error.message);
         }
     };
 
@@ -64,13 +58,6 @@ function Simulador() {
                 const heroi1 = await response1.json();
                 const heroi2 = await response2.json();
 
-                console.log(heroi1);
-                console.log(heroi2);
-
-                if (!heroi1 || !heroi2) {
-                    throw new Error("Dados dos heróis não encontrados");
-                }
-
                 const response = await fetch('/batalhar', {
                     method: 'POST',
                     headers: {
@@ -84,8 +71,10 @@ function Simulador() {
                 }
 
                 const data = await response.json();
-                console.log(data);
-                goToResult();
+                console.log("Dados da Batalha:", data);
+                let jsonString = JSON.stringify(data); 
+                let parsedObj = JSON.parse(jsonString);
+                navigate('/resultado', { state: { batalharesultado: parsedObj } });
             } catch (error) {
                 console.error(error.message);
             }
@@ -114,7 +103,7 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={handleInfoClick} /> 
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={() => handleInfoClick(selectedHeroiID1)} />
                     </div>
                     <div className="right-fighter">
                         <span>Escolha o lutador 2:</span>
@@ -126,7 +115,7 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={handleInfoClick}/> 
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={() => handleInfoClick(selectedHeroiID2)} />
                     </div>
                 </div>
                 <button className="battle-button" onClick={handleBatalha}>Batalhar</button>
