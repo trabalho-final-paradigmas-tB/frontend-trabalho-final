@@ -4,18 +4,18 @@ import './result.css';
 
 const Result = () => {
   const location = useLocation();
-  const { batalharesultado } = location.state || {};
+  const { resultados, vencedor } = location.state.batalharesultado || {};
 
-  console.log("Dados recebidos na página de resultados:", batalharesultado);
+  console.log("Dados recebidos na página de resultados:", resultados, vencedor);
 
-  if (!batalharesultado || batalharesultado.length === 0) {
+  if (!resultados || resultados.length === 0) {
     return <div>Nenhum dado de batalha disponível</div>;
   }
 
   return (
     <div className='Result'>
       <h1>Resultado da Batalha</h1>
-      {batalharesultado.map((turnoData, index) => (
+      {resultados.map((turnoData, index) => (
         <div key={index} className='turno'>
           <h2>Turno {index + 1}</h2>
           {turnoData.turnos.map((heroi, idx) => (
@@ -30,6 +30,9 @@ const Result = () => {
           {turnoData.consequencias && <p><strong>Consequências:</strong> {turnoData.consequencias}</p>}
         </div>
       ))}
+      <div className='vencedor'>
+        <h2>Vencedor da Batalha: {vencedor}</h2>
+      </div>
     </div>
   );
 };
