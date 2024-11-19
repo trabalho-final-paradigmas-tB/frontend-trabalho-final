@@ -6,6 +6,8 @@ function Simulador() {
     const [selectedHeroiID, setSelectedHeroiID] = useState(null);
     const [heroiDetails, setHeroiDetails] = useState(null);
     const [dialogOpen, setDialogOpen] = useState(false);
+    const [selectedHeroiID1, setSelectedHeroiID1] = useState(null);
+    const [selectedHeroiID2, setSelectedHeroiID2] = useState(null);
 
     useEffect(() => {
         async function fetchHerois() {
@@ -23,10 +25,9 @@ function Simulador() {
         fetchHerois();
     }, []);
 
-    const handleInfoClick = async () => {
-        if (selectedHeroiID) {
+   /* const handleInfoClick = async () => {
+        if (selectedHeroiID) {5
             try {
-                // Usando query string com o ID do herói selecionado
                 const response = await fetch(`/heroi?id=${selectedHeroiID}`);
                 if (!response.ok) {
                     throw new Error("Erro ao buscar detalhes do herói");
@@ -37,6 +38,51 @@ function Simulador() {
             } catch (error) {
                 console.error(error.message);
             }
+        }
+    };
+    */
+    const handleBatalha = async () => {
+        if (selectedHeroiID1 && selectedHeroiID2) {
+            try {
+                const response1 = await fetch(`/heroiid?id=${selectedHeroiID1}`);
+                const response2 = await fetch(`/heroiid?id=${selectedHeroiID2}`);
+
+                if (!response1.ok) {
+                    throw new Error("Erro ao buscar detalhes do herói 1");
+                }
+                if (!response2.ok) {
+                    throw new Error("Erro ao buscar detalhes do herói 2");
+                }
+
+                const heroi1 = await response1.json();
+                const heroi2 = await response2.json();
+
+                console.log(heroi1);
+                console.log(heroi2);
+
+                if (!heroi1 || !heroi2) {
+                    throw new Error("Dados dos heróis não encontrados");
+                }
+
+                const response = await fetch('/batalhar', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ lutadores: [heroi1, heroi2] })
+                });
+
+                if (!response.ok) {
+                    throw new Error("Erro ao iniciar a batalha");
+                }
+
+                const data = await response.json();
+                console.log(data);
+            } catch (error) {
+                console.error(error.message);
+            }
+        } else {
+            console.error("Selecione dois heróis para a batalha");
         }
     };
 
@@ -52,7 +98,7 @@ function Simulador() {
                 <div className="container">
                     <div className="left-fighter">
                         <span>Escolha o lutador 1:</span>
-                        <select className="fighter-select" onChange={(e) => setSelectedHeroiID(e.target.value)}>
+                        <select className="fighter-select" onChange={(e) => setSelectedHeroiID1(e.target.value)}>
                             <option value="">Selecione um herói</option>
                             {herois.map((heroi) => (
                                 <option key={heroi.codigo_heroi} value={heroi.codigo_heroi}>
@@ -60,11 +106,11 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={handleInfoClick} /> 
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} /*onClick={handleInfoClick}*/ /> 
                     </div>
                     <div className="right-fighter">
                         <span>Escolha o lutador 2:</span>
-                        <select className="fighter-select" onChange={(e) => setSelectedHeroiID(e.target.value)}>
+                        <select className="fighter-select" onChange={(e) => setSelectedHeroiID2(e.target.value)}>
                             <option value="">Selecione um herói</option>
                             {herois.map((heroi) => (
                                 <option key={heroi.codigo_heroi} value={heroi.codigo_heroi}>
@@ -72,10 +118,10 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={handleInfoClick} /> 
+                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} /*onClick={handleInfoClick}*//> 
                     </div>
                 </div>
-                <button className="battle-button">Batalhar</button>
+                <button className="battle-button" onClick={handleBatalha}>Batalhar</button>
 
                 {/* Dialog para exibir detalhes do herói */}
                 <dialog open={dialogOpen} className="heroi-dialog">
