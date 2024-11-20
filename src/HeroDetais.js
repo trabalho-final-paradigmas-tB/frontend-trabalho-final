@@ -199,7 +199,9 @@ function HeroDetails({ hero }) {
           <p><strong>Nível de Força:</strong> {hero.nivel_forca}</p>
           <p><strong>Popularidade:</strong> {hero.popularidade}</p>
           <p><strong>Status:</strong> {hero.status}</p>
-          <p><strong>Histórico de Batalhas:</strong> {hero.historico_batalhas}</p>
+          <p>
+            <strong>Histórico de Batalhas:</strong> {`${hero.historico_batalhas[0]} vitórias e ${hero.historico_batalhas[1]} derrotas`}
+          </p>
           <p><strong>Data de Nascimento:</strong> {formatDate(hero.data_nascimento)}</p>
           <button className="deleteButton" onClick={handleDelete}>Deletar Herói</button>
           <button className="editButton" onClick={() => setIsEditing(true)}>Editar Herói</button>

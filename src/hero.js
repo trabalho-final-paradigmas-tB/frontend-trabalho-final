@@ -25,7 +25,6 @@ function Hero() {
     nivel_forca: '',
     popularidade: '',
     status: '',
-    historico_batalhas: '',
     data_nascimento: '',
   });
 
@@ -108,7 +107,6 @@ function Hero() {
           nivel_forca: '',
           popularidade: '',
           status: '',
-          historico_batalhas: '',
           data_nascimento: '',
         });
         setDrawerOpen(false);
@@ -224,8 +222,6 @@ function Hero() {
                     <MenuItem value="Banido">Banido</MenuItem>
                   </Select>
                 </FormControl>
-
-                <TextField label="Histórico de Batalhas" name="historico_batalhas" value={newHero.historico_batalhas} onChange={handleInputChange} fullWidth className="text-field"/>
                 <TextField label="Data de Nascimento" name="data_nascimento" value={newHero.data_nascimento} onChange={handleInputChange} InputLabelProps={{ shrink: true }} type="date" fullWidth className="text-field"/>
               </div>
               <Button variant="contained" color="primary" onClick={handleInsertHero} fullWidth>
