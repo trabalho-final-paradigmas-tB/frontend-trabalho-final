@@ -7,9 +7,9 @@ function Crimes() {
     const [error, setError] = useState(null); // Estado para capturar erros
     const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Estado para o drawer
     const [novoCrime, setNovoCrime] = useState({
-        nome_crime: "",
+        nome: "",
         descricao: "",
-        data_crime: "",
+        data: "",
         heroi_responsavel: "",
         severidade: "",
     });
@@ -49,11 +49,9 @@ function Crimes() {
                 throw new Error(`Erro HTTP: ${response.status}`);
             }
 
-            await response.json(); // Resposta do back-end
-
             alert("Crime inserido com sucesso!");
             setIsDrawerOpen(false); // Fecha o drawer
-            setNovoCrime({ nome_crime: "", descricao: "", data_crime: "", heroi_responsavel: "", severidade: "" }); // Reseta o formulário
+            setNovoCrime({ nome: "", descricao: "", data: "", heroi_responsavel: "", severidade: "" }); // Reseta o formulário
 
             // Atualiza os dados dos crimes
             fetchCrimes(); // Chama a função para buscar os crimes novamente
@@ -105,8 +103,8 @@ function Crimes() {
                                 Nome do Crime:
                                 <input
                                     type="text"
-                                    value={novoCrime.nome_crime}
-                                    onChange={(e) => setNovoCrime({ ...novoCrime, nome_crime: e.target.value })}
+                                    value={novoCrime.nome}
+                                    onChange={(e) => setNovoCrime({ ...novoCrime, nome: e.target.value })}
                                     required
                                 />
                             </label>
@@ -122,8 +120,8 @@ function Crimes() {
                                 Data do Crime:
                                 <input
                                     type="date"
-                                    value={novoCrime.data_crime}
-                                    onChange={(e) => setNovoCrime({ ...novoCrime, data_crime: e.target.value })}
+                                    value={novoCrime.data}
+                                    onChange={(e) => setNovoCrime({ ...novoCrime, data: e.target.value })}
                                     required
                                 />
                             </label>
@@ -170,9 +168,9 @@ function Crimes() {
                     crimes && crimes.length > 0 ? (
                         crimes.map((crime) => (
                             <div key={crime.id} className="crime-card">
-                                <h2>{crime.nome_crime}</h2>
+                                <h2>{crime.nome}</h2>
                                 <p><strong>Descrição:</strong> {crime.descricao}</p>
-                                <p><strong>Data:</strong> {new Date(crime.data_crime).toLocaleDateString()}</p>
+                                <p><strong>Data:</strong> {new Date(crime.data).toLocaleDateString()}</p>
                                 <p><strong>Id do herói responsável:</strong> {crime.heroi_responsavel || "Nenhum"}</p>
                                 <p><strong>Severidade:</strong> {crime.severidade}</p>
                                 <button onClick={() => ocultarCrime(crime.id)}>Ocultar</button>

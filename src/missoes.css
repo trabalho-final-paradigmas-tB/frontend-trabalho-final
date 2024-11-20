@@ -3,7 +3,62 @@
     padding: 0;
 }
 
+.Missoes {
+    margin-bottom: 30px;
+    box-sizing: content-box;
+    display: flex;
+    flex-direction: column;
+}
+
 .textoMissao {
     color: white;
     font-size: 20px;
+}
+
+.listaMissoes {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.missaoCard {
+    background-color: #CF4647;
+    color: white;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+.missaoTitulo {
+    color: white;
+}
+
+.botaoInserir {
+    align-self: center;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 7px;
+    background-color: #CF4647;
+    color: white;
+    cursor: pointer;
+    transition: transform 0.3s;
+    font-size: 18px;
+}
+
+.botaoInserir:hover {
+    transform: scale(1.05);
+}
+
+.botoesCard {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    justify-content: space-evenly;
+}
+
+.botoesCard button {
+    cursor: pointer;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    font-size: 15px;
 }
