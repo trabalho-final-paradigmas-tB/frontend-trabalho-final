@@ -149,7 +149,6 @@ function Simulador() {
                     Batalhar
                 </button>
 
-                {/* Drawer para exibir os detalhes do herói */}
                 <Drawer
                     anchor="right"
                     open={drawerOpen}
@@ -164,8 +163,8 @@ function Simulador() {
                                 <h2>{heroiDetails.nome_heroi}</h2>
                                 <p><strong>Nome Real:</strong> {heroiDetails.nome_real}</p>
                                 <p><strong>Sexo:</strong> {heroiDetails.sexo}</p>
-                                <p><strong>Altura:</strong> {heroiDetails.altura_heroi} cm</p>
-                                <p><strong>Peso:</strong> {heroiDetails.peso_heroi} kg</p>
+                                <p><strong>Altura:</strong> {heroiDetails.altura} cm</p>
+                                <p><strong>Peso:</strong> {heroiDetails.peso} kg</p>
                                 <p><strong>Poderes:</strong> {heroiDetails.poderes}</p>
                                 <p><strong>Nível de Força:</strong> {heroiDetails.nivel_forca}</p>
                                 <p><strong>Popularidade:</strong> {heroiDetails.popularidade}</p>
