@@ -1,14 +1,14 @@
 import React, { useState, useEffect } from "react";
-import './simulador.css';
+import { Drawer } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import './simulador.css';
 
 function Simulador() {
     const [herois, setHerois] = useState([]);
-    const [selectedHeroiID, setSelectedHeroiID] = useState(null);
-    const [heroiDetails, setHeroiDetails] = useState(null);
-    const [dialogOpen, setDialogOpen] = useState(false);
     const [selectedHeroiID1, setSelectedHeroiID1] = useState(null);
     const [selectedHeroiID2, setSelectedHeroiID2] = useState(null);
+    const [drawerOpen, setDrawerOpen] = useState(false);
+    const [heroiDetails, setHeroiDetails] = useState(null);
 
     const navigate = useNavigate();
 
@@ -29,14 +29,22 @@ function Simulador() {
     }, []);
 
     const handleInfoClick = async (id) => {
+        if (!id) return; // Evita abrir o drawer sem herói selecionado.
         try {
-            const response = await fetch(`/heroiid?id=${id}`);
+            const response = await fetch('/heroi'); // Requisição ao endpoint que retorna todos os heróis
             if (!response.ok) {
-                throw new Error("Erro ao buscar detalhes do herói");
+                throw new Error("Erro ao buscar detalhes dos heróis");
             }
             const data = await response.json();
-            setHeroiDetails(data);
-            setDialogOpen(true);
+    
+            // Filtrar o herói correspondente pelo ID
+            const heroiSelecionado = data.find((heroi) => heroi.codigo_heroi === id);
+            if (!heroiSelecionado) {
+                throw new Error("Herói não encontrado");
+            }
+    
+            setHeroiDetails(heroiSelecionado);
+            setDrawerOpen(true);
         } catch (error) {
             console.error(error.message);
         }
@@ -71,8 +79,7 @@ function Simulador() {
                 }
 
                 const data = await response.json();
-                console.log("Dados da Batalha:", data);
-                let jsonString = JSON.stringify(data); 
+                let jsonString = JSON.stringify(data);
                 let parsedObj = JSON.parse(jsonString);
                 navigate('/resultado', { state: { batalharesultado: parsedObj } });
             } catch (error) {
@@ -83,10 +90,12 @@ function Simulador() {
         }
     };
 
-    const handleCloseDialog = () => {
-        setDialogOpen(false);
+    const handleCloseDrawer = () => {
+        setDrawerOpen(false);
         setHeroiDetails(null);
     };
+
+    console.log(heroiDetails)
 
     return (
         <div className="simulador-container">
@@ -95,7 +104,10 @@ function Simulador() {
                 <div className="container">
                     <div className="left-fighter">
                         <span>Escolha o lutador 1:</span>
-                        <select className="fighter-select" onChange={(e) => setSelectedHeroiID1(e.target.value)}>
+                        <select
+                            className="fighter-select"
+                            onChange={(e) => setSelectedHeroiID1(e.target.value)}
+                        >
                             <option value="">Selecione um herói</option>
                             {herois.map((heroi) => (
                                 <option key={heroi.codigo_heroi} value={heroi.codigo_heroi}>
@@ -103,11 +115,20 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={() => handleInfoClick(selectedHeroiID1)} />
+                        <img
+                            className="infoIcon"
+                            src="/assets/botao-de-informacoes.png"
+                            alt="iconInfo"
+                            style={{ width: '40px', height: '40px', cursor: 'pointer' }}
+                            onClick={() => handleInfoClick(selectedHeroiID1)}
+                        />
                     </div>
                     <div className="right-fighter">
                         <span>Escolha o lutador 2:</span>
-                        <select className="fighter-select" onChange={(e) => setSelectedHeroiID2(e.target.value)}>
+                        <select
+                            className="fighter-select"
+                            onChange={(e) => setSelectedHeroiID2(e.target.value)}
+                        >
                             <option value="">Selecione um herói</option>
                             {herois.map((heroi) => (
                                 <option key={heroi.codigo_heroi} value={heroi.codigo_heroi}>
@@ -115,28 +136,47 @@ function Simulador() {
                                 </option>
                             ))}
                         </select>
-                        <img className="infoIcon" src="/assets/botao-de-informacoes.png" alt="iconInfo" style={{ width: '40px', height: '40px', cursor: 'pointer' }} onClick={() => handleInfoClick(selectedHeroiID2)} />
+                        <img
+                            className="infoIcon"
+                            src="/assets/botao-de-informacoes.png"
+                            alt="iconInfo"
+                            style={{ width: '40px', height: '40px', cursor: 'pointer' }}
+                            onClick={() => handleInfoClick(selectedHeroiID2)}
+                        />
                     </div>
                 </div>
-                <button className="battle-button" onClick={handleBatalha}>Batalhar</button>
+                <button className="battle-button" onClick={handleBatalha}>
+                    Batalhar
+                </button>
 
-                <dialog open={dialogOpen} className="heroi-dialog">
-                    {heroiDetails ? (
-                        <div>
-                            <h2>{heroiDetails.nome_heroi}</h2>
-                            <p><strong>Nome Real:</strong> {heroiDetails.nome_real}</p>
-                            <p><strong>Sexo:</strong> {heroiDetails.sexo}</p>
-                            <p><strong>Altura:</strong> {heroiDetails.altura_heroi} cm</p>
-                            <p><strong>Peso:</strong> {heroiDetails.peso_heroi} kg</p>
-                            <p><strong>Poderes:</strong> {heroiDetails.poderes}</p>
-                            <p><strong>Nível de Força:</strong> {heroiDetails.nivel_forca}</p>
-                            <p><strong>Popularidade:</strong> {heroiDetails.popularidade}</p>
-                            <button onClick={handleCloseDialog}>Fechar</button>
-                        </div>
-                    ) : (
-                        <p>Carregando...</p>
-                    )}
-                </dialog>
+                {/* Drawer para exibir os detalhes do herói */}
+                <Drawer
+                    anchor="right"
+                    open={drawerOpen}
+                    onClose={handleCloseDrawer}
+                    PaperProps={{
+                        sx: { width: "400px", backgroundColor: "#2e2e2e", color: "#fff" },
+                    }}
+                >
+                    <div className="drawer-container">
+                        {heroiDetails ? (
+                            <>
+                                <h2>{heroiDetails.nome_heroi}</h2>
+                                <p><strong>Nome Real:</strong> {heroiDetails.nome_real}</p>
+                                <p><strong>Sexo:</strong> {heroiDetails.sexo}</p>
+                                <p><strong>Altura:</strong> {heroiDetails.altura_heroi} cm</p>
+                                <p><strong>Peso:</strong> {heroiDetails.peso_heroi} kg</p>
+                                <p><strong>Poderes:</strong> {heroiDetails.poderes}</p>
+                                <p><strong>Nível de Força:</strong> {heroiDetails.nivel_forca}</p>
+                                <p><strong>Popularidade:</strong> {heroiDetails.popularidade}</p>
+                                <button onClick={handleCloseDrawer}>Fechar</button>
+                            </>
+                        ) : (
+                            <p>Carregando...</p>
+                        )}
+                    </div>
+                </Drawer>
+
             </div>
         </div>
     );

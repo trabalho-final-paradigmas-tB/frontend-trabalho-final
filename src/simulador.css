@@ -4,12 +4,6 @@
     box-sizing: border-box;
 }
 
-.App {
-    display: flex;
-    justify-content: center;
-    height: 100vh;
-}
-
 h1 {
     font-size: 64px;
     margin-bottom: 50px;
@@ -20,11 +14,6 @@ h1 {
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
-    text-align: center;
 }
 
 .container {
@@ -52,8 +41,9 @@ h1 {
     margin-top: 20px;
     border: none;
     border-radius: 5px;
-    padding: 20px;
+    padding: 30px;
     width: 200px;
+    text-align: center;
     cursor: pointer;
 }
 
@@ -76,4 +66,52 @@ h1 {
 
 .infoIcon {
     margin-top: 20px;
+}
+
+/* Estilo para o Drawer */
+.drawer-container {
+    width: 400px;
+    background-color: #2e2e2e; /* Fundo escuro para contrastar */
+    color: #fff;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100%;
+    box-shadow: -5px 0px 15px rgba(0, 0, 0, 0.3);
+    font-family: 'Poppins', sans-serif; /* Fonte moderna */
+}
+
+.drawer-container h2 {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: #f1c40f; /* Destaque amarelo */
+    margin-bottom: 10px;
+}
+
+.drawer-container p {
+    font-size: 1rem;
+    margin: 5px 0;
+}
+
+.drawer-container p strong {
+    font-weight: bold;
+    color: #f1f1f1;
+}
+
+.drawer-container button {
+    background-color: #e74c3c;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 1rem;
+    cursor: pointer;
+    align-self: flex-start;
+    margin-top: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.drawer-container button:hover {
+    background-color: #c0392b;
 }
