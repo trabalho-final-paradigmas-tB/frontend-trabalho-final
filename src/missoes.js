@@ -4,13 +4,91 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import './missoes.css';
 
+// Constantes
+const API_URL = 'http://localhost:8091/missao';
+
+// Componentes auxiliares
+const MissionForm = ({ mission, onChange, onSubmit, onClose }) => (
+    <form onSubmit={onSubmit}>
+        <TextField
+            name="nome"
+            label="Nome"
+            fullWidth
+            margin="normal"
+            required
+            value={mission.nome}
+            onChange={onChange}
+        />
+        <TextField
+            name="descricao"
+            label="Descrição"
+            fullWidth
+            margin="normal"
+            multiline
+            rows={3}
+            required
+            value={mission.descricao}
+            onChange={onChange}
+        />
+        <TextField
+            name="classificacao"
+            label="Classificação"
+            fullWidth
+            margin="normal"
+            required
+            value={mission.classificacao}
+            onChange={onChange}
+        />
+        <TextField
+            name="dificuldade"
+            label="Dificuldade"
+            type="number"
+            fullWidth
+            margin="normal"
+            inputProps={{ min: 1, max: 10 }}
+            required
+            value={mission.dificuldade}
+            onChange={onChange}
+        />
+        <TextField
+            name="herois"
+            label="Heróis (separados por vírgulas)"
+            fullWidth
+            margin="normal"
+            value={mission.herois}
+            onChange={onChange}
+        />
+        <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            fullWidth
+            style={{ marginTop: '16px' }}
+        >
+            Salvar
+        </Button>
+        <Button
+            variant="outlined"
+            color="secondary"
+            fullWidth
+            onClick={onClose}
+            style={{ marginTop: '8px' }}
+        >
+            Cancelar
+        </Button>
+    </form>
+);
+
 function Missoes() {
     const [missoes, setMissoes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const [selectedMissao, setSelectedMissao] = useState(null);
+
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [secondaryDrawerOpen, setSecondaryDrawerOpen] = useState(false);
+
+    const [selectedMissao, setSelectedMissao] = useState(null);
+
     const [newMission, setNewMission] = useState({
         nome: '',
         descricao: '',
@@ -19,18 +97,12 @@ function Missoes() {
         herois: '',
     });
 
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewMission({ ...newMission, [name]: value });
-    };
-
+    // Fetch de missões
     useEffect(() => {
         const fetchMissoes = async () => {
             try {
-                const response = await fetch('http://localhost:8091/missao');
-                if (!response.ok) {
-                    throw new Error('Erro ao buscar missões');
-                }
+                const response = await fetch(API_URL);
+                if (!response.ok) throw new Error('Erro ao buscar missões');
                 const data = await response.json();
                 setMissoes(data);
             } catch (err) {
@@ -39,9 +111,14 @@ function Missoes() {
                 setLoading(false);
             }
         };
-
         fetchMissoes();
     }, []);
+
+    // Handlers de formulários
+    const handleInputChange = (e) => {
+        const { name, value } = e.target;
+        setNewMission({ ...newMission, [name]: value });
+    };
 
     const handleEditClick = (missao) => {
         setSelectedMissao(missao);
@@ -50,287 +127,192 @@ function Missoes() {
 
     const handleAddMission = async (event) => {
         event.preventDefault();
-    
-        // Preparar os dados para envio
         const missionData = {
-            nome: newMission.nome,
-            descrição: newMission.descricao,
-            classificação: newMission.classificacao,
+            ...newMission,
             dificuldade: parseInt(newMission.dificuldade, 10),
-            herois: newMission.herois.split(',').map((h) => h.trim()), // Dividir heróis por vírgulas
+            herois: newMission.herois.split(',').map((h) => h.trim()),
         };
-    
+
         try {
-            const response = await fetch('http://localhost:8091/missao', {
+            const response = await fetch(API_URL, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
+                headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(missionData),
             });
-    
-            if (!response.ok) {
-                throw new Error('Erro ao adicionar missão');
-            }
-    
+            if (!response.ok) throw new Error('Erro ao adicionar missão');
             const result = await response.json();
             alert(result.mensagem);
-    
-            setMissoes((prevMissoes) => [...prevMissoes, result.missao]);
+            setMissoes((prev) => [...prev, missionData]);
             setSecondaryDrawerOpen(false);
-            setNewMission({ nome: '', descricao: '', classificacao: '', dificuldade: '', herois: '' }); // Resetar o formulário
+            setNewMission({
+                nome: '',
+                descricao: '',
+                classificacao: '',
+                dificuldade: '',
+                herois: '',
+            });
         } catch (err) {
             alert('Erro ao adicionar missão: ' + err.message);
         }
     };
 
-    const handleEditSubmit = async (event) => {
-        event.preventDefault();
-        const { id, nome, descricao, classificacao, dificuldade } = selectedMissao;
-
-        try {
-            const response = await fetch(`http://localhost:8091/missao/${id}`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    nome,
-                    descrição: descricao,
-                    classificação: classificacao,
-                    dificuldade: parseInt(dificuldade, 10),
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error('Erro ao editar missão');
-            }
-
-            const result = await response.json();
-            alert(result.mensagem);
-
-            setMissoes((prevMissoes) =>
-                prevMissoes.map((missao) =>
-                    missao.id === id
-                        ? { ...missao, nome, descrição: descricao, classificação: classificacao, dificuldade }
-                        : missao
-                )
-            );
-
-            setDrawerOpen(false);
-        } catch (err) {
-            alert('Erro ao editar missão: ' + err.message);
-        }
-    };
-
     const handleDelete = async (id) => {
-        const confirmDelete = window.confirm('Tem certeza que deseja deletar esta missão?');
+        if (!id) {
+            alert('ID da missão inválido');
+            return;
+        }
+    
+        const confirmDelete = window.confirm('Você tem certeza que deseja deletar esta missão?');
         if (!confirmDelete) return;
-
+    
         try {
-            const response = await fetch(`http://localhost:8091/missao/${id}`, {
+            const response = await fetch(`${API_URL}/${id}`, {
                 method: 'DELETE',
             });
-            if (!response.ok) {
-                throw new Error('Erro ao deletar missão');
-            }
-
+            if (!response.ok) throw new Error('Erro ao deletar missão');
             const result = await response.json();
-            alert(result.mensagem);
-            setMissoes((prevMissoes) => prevMissoes.filter((missao) => missao.id !== id));
+            alert(result.mensagem || 'Missão deletada com sucesso');
+            setMissoes((prev) => prev.filter((missao) => missao.id !== id));
         } catch (err) {
             alert('Erro ao deletar missão: ' + err.message);
         }
     };
 
-    const closeDrawer = () => {
-        setDrawerOpen(false);
-        setSelectedMissao(null);
+    const handleResultado = async (id) => {
+        console.log('ID da missão selecionada:', id);
+    
+        if (!id) {
+            alert('ID da missão inválido');
+            return;
+        }
+    
+        // Garantir que você está enviando a missão completa
+        const missao = missoes.find(m => m.id === id);  // Encontrar a missão com o ID
+    
+        if (!missao) {
+            alert('Missão não encontrada');
+            return;
+        }
+    
+        try {
+            const response = await fetch(`${API_URL}/resultadomissao`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(missao),  // Enviando toda a missão, não só o id
+            });
+    
+            if (!response.ok) throw new Error('Erro ao verificar resultado da missão');
+            const resultado = await response.json();
+            
+            alert(`Resultado da Missão:\n${JSON.stringify(resultado, null, 2)}`);
+        } catch (err) {
+            alert('Erro ao verificar resultado: ' + err.message);
+        }
     };
-
-    const closeSecondaryDrawer = () => {
-        setSecondaryDrawerOpen(false);
+    
+    const handleEditSubmit = async (event) => {
+        event.preventDefault();
+        if (!selectedMissao) return;
+    
+        const updatedMission = {
+            ...selectedMissao,
+            dificuldade: parseInt(selectedMissao.dificuldade, 10),
+            herois: Array.isArray(selectedMissao.herois)
+                ? selectedMissao.herois.map((h) => h.trim()) // Já é array
+                : selectedMissao.herois.split(',').map((h) => h.trim()), // É string
+        };
+    
+        try {
+            const response = await fetch(`${API_URL}/${updatedMission.id}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(updatedMission),
+            });
+            if (!response.ok) throw new Error('Erro ao editar missão');
+            const result = await response.json();
+            alert(result.mensagem);
+            setMissoes((prev) =>
+                prev.map((missao) => (missao.id === updatedMission.id ? updatedMission : missao))
+            );
+            setDrawerOpen(false);
+        } catch (err) {
+            alert('Erro ao editar missão: ' + err.message);
+        }
     };
+    
 
-    if (loading) {
-        return <p>Carregando missões...</p>;
-    }
-
-    if (error) {
-        return <p>Erro: {error}</p>;
-    }
+    // Component principal
+    if (loading) return <p>Carregando missões...</p>;
+    if (error) return <p>Erro: {error}</p>;
 
     return (
         <div className="Missoes">
             <h1 className="titleMissao">Missões</h1>
-            <button className="botaoInserir" onClick={() => setSecondaryDrawerOpen(true)}>Inserir missão</button>
-            <p className="textoMissao">Aqui é possível consultar, editar, deletar e adicionar missões no banco de dados</p>
+            <button className='butaoInserir' onClick={() => setSecondaryDrawerOpen(true)}>Inserir missão</button>
+
             <div className="listaMissoes">
-                {missoes.map((missao) => (
-                    <div key={missao.id} className="missaoCard">
-                        <h2 className="missaoTitulo">{missao.nome}</h2>
-                        <p><strong>Descrição:</strong> {missao.descrição}</p>
-                        <p><strong>Classificação:</strong> {missao.classificação}</p>
-                        <p><strong>Dificuldade:</strong> {missao.dificuldade}</p>
-                        <p><strong>Heróis:</strong> {missao.herois?.length > 0 ? missao.herois.join(', ') : 'Nenhum'}</p>
-                        <div className="botoesCard">
-                            <button onClick={() => handleEditClick(missao)}>Editar</button>
-                            <button onClick={() => handleDelete(missao.id)}>Deletar</button>
+                {loading ? (
+                    <p>Carregando missões...</p>
+                ) : error ? (
+                    <p className="error">Erro ao carregar missões: {error}</p>
+                ) : !missoes || missoes.length === 0 ? (
+                    <p className="nenhumaMissao">Nenhuma missão disponível no momento.</p>
+                ) : (
+                    missoes.map((missao) => (
+                        <div key={missao.id} className="missaoCard">
+                            <h2>{missao.nome}</h2>
+                            <p><strong>Descrição:</strong> {missao.descricao}</p>
+                            <p><strong>Classificação:</strong> {missao.classificacao}</p>
+                            <p><strong>Dificuldade:</strong> {missao.dificuldade}</p>
+                            <p>
+                                <strong>Heróis:</strong>{' '}
+                                {missao.herois && missao.herois.length > 0 ? missao.herois.join(', ') : 'Nenhum'}
+                            </p>
+                            <Button onClick={() => handleEditClick(missao)}>Editar</Button>
+                            <Button
+                                onClick={() => handleDelete(missao.id)}
+                                color="error"
+                                style={{ marginLeft: '8px' }}
+                            >
+                                Deletar
+                            </Button>
+                            <Button
+                                className='butaoResultado'
+                                onClick={() => handleResultado(missao.id)}
+                                color="primary"
+                                style={{ marginLeft: '8px' }}
+                            >
+                                Resultado
+                            </Button>
                         </div>
-                    </div>
-                ))}
+                    ))
+                )}
             </div>
 
-            {/* Drawer de edição */}
-            <Drawer
-                anchor="right"
-                open={drawerOpen}
-                onClose={closeDrawer}
-            >
-                <div style={{ width: '300px', padding: '16px' }}>
-                    <h2>Editar Missão</h2>
-                    {selectedMissao && (
-                        <form onSubmit={handleEditSubmit}>
-                            <TextField
-                                label="Nome"
-                                fullWidth
-                                margin="normal"
-                                value={selectedMissao.nome || ''}
-                                onChange={(e) =>
-                                    setSelectedMissao({ ...selectedMissao, nome: e.target.value })
-                                }
-                            />
-                            <TextField
-                                label="Descrição"
-                                fullWidth
-                                margin="normal"
-                                multiline
-                                rows={3}
-                                value={selectedMissao.descricao || ''}
-                                onChange={(e) =>
-                                    setSelectedMissao({ ...selectedMissao, descricao: e.target.value })
-                                }
-                            />
-                            <TextField
-                                label="Classificação"
-                                fullWidth
-                                margin="normal"
-                                value={selectedMissao.classificacao || ''}
-                                onChange={(e) =>
-                                    setSelectedMissao({ ...selectedMissao, classificacao: e.target.value })
-                                }
-                            />
-                            <TextField
-                                label="Dificuldade"
-                                fullWidth
-                                margin="normal"
-                                type="number"
-                                inputProps={{ min: 1, max: 10 }}
-                                value={selectedMissao.dificuldade || ''}
-                                onChange={(e) =>
-                                    setSelectedMissao({ ...selectedMissao, dificuldade: e.target.value })
-                                }
-                            />
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="primary"
-                                fullWidth
-                                style={{ marginTop: '16px' }}
-                            >
-                                Salvar
-                            </Button>
-                            <Button
-                                variant="outlined"
-                                color="secondary"
-                                fullWidth
-                                onClick={closeDrawer}
-                                style={{ marginTop: '8px' }}
-                            >
-                                Cancelar
-                            </Button>
-                        </form>
-                    )}
-                </div>
+            {/* Drawers */}
+            <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
+            <MissionForm
+                mission={{
+                    ...selectedMissao,
+                    herois: Array.isArray(selectedMissao?.herois)
+                        ? selectedMissao.herois.join(', ') // Convertendo array para string
+                        : selectedMissao?.herois || '', // Garantindo que seja string
+                }}
+                onChange={(e) =>
+                    setSelectedMissao({ ...selectedMissao, [e.target.name]: e.target.value })
+                }
+                onSubmit={handleEditSubmit}
+                onClose={() => setDrawerOpen(false)}
+            />
             </Drawer>
 
-            {/* Novo Drawer para inserir missão */}
-            <Drawer
-                anchor="right"
-                open={secondaryDrawerOpen}
-                onClose={closeSecondaryDrawer}
-            >
-                <div style={{ width: '300px', padding: '16px' }}>
-                    <h2>Inserir Nova Missão</h2>
-                    <form onSubmit={handleAddMission}>
-                        <TextField
-                            name="nome"
-                            label="Nome"
-                            fullWidth
-                            margin="normal"
-                            required
-                            value={newMission.nome}
-                            onChange={handleInputChange}
-                        />
-                        <TextField
-                            name="descricao"
-                            label="Descrição"
-                            fullWidth
-                            margin="normal"
-                            multiline
-                            rows={3}
-                            required
-                            value={newMission.descricao}
-                            onChange={handleInputChange}
-                        />
-                        <TextField
-                            name="classificacao"
-                            label="Classificação"
-                            fullWidth
-                            margin="normal"
-                            required
-                            value={newMission.classificacao}
-                            onChange={handleInputChange}
-                        />
-                        <TextField
-                            name="dificuldade"
-                            label="Dificuldade"
-                            type="number"
-                            fullWidth
-                            margin="normal"
-                            inputProps={{ min: 1, max: 10 }}
-                            required
-                            value={newMission.dificuldade}
-                            onChange={handleInputChange}
-                        />
-                        <TextField
-                            name="herois"
-                            label="Heróis (separados por vírgulas)"
-                            fullWidth
-                            margin="normal"
-                            value={newMission.herois}
-                            onChange={handleInputChange}
-                        />
-                        <Button
-                            type="submit"
-                            variant="contained"
-                            color="primary"
-                            fullWidth
-                            style={{ marginTop: '16px' }}
-                        >
-                            Adicionar Missão
-                        </Button>
-                        <Button
-                            variant="outlined"
-                            color="secondary"
-                            fullWidth
-                            onClick={closeSecondaryDrawer}
-                            style={{ marginTop: '8px' }}
-                        >
-                            Fechar
-                        </Button>
-                    </form>
-                </div>
+            <Drawer open={secondaryDrawerOpen} onClose={() => setSecondaryDrawerOpen(false)}>
+                <MissionForm
+                    mission={newMission}
+                    onChange={handleInputChange}
+                    onSubmit={handleAddMission}
+                    onClose={() => setSecondaryDrawerOpen(false)}
+                />
             </Drawer>
         </div>
     );
