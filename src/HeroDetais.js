@@ -192,7 +192,7 @@ function HeroDetails({ hero }) {
         <>
           <p><strong>Nome Real:</strong> {hero.nome_real}</p>
           <p><strong>Sexo:</strong> {hero.sexo}</p>
-          <p><strong>Altura:</strong> {hero.altura_heroi} cm</p>
+          <p><strong>Altura:</strong> {hero.altura_heroi} m</p>
           <p><strong>Peso:</strong> {hero.peso_heroi} kg</p>
           <p><strong>Local de Nascimento:</strong> {hero.local_nascimento}</p>
           <p><strong>Poderes:</strong> {hero.poderes}</p>
