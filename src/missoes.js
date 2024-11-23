@@ -27,7 +27,7 @@ const MissionForm = ({ mission, onChange, onSubmit, onClose }) => (
             multiline
             rows={3}
             required
-            value={mission.descricao}
+            value={mission.descrição}
             onChange={onChange}
         />
         <TextField
@@ -36,7 +36,7 @@ const MissionForm = ({ mission, onChange, onSubmit, onClose }) => (
             fullWidth
             margin="normal"
             required
-            value={mission.classificacao}
+            value={mission.classificação}
             onChange={onChange}
         />
         <TextField
@@ -83,16 +83,16 @@ function Missoes() {
     const [missoes, setMissoes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
     const [drawerOpen, setDrawerOpen] = useState(false);
     const [secondaryDrawerOpen, setSecondaryDrawerOpen] = useState(false);
-
+    const [resultadoDrawerOpen, setResultadoDrawerOpen] = useState(false);
+    const [resultadoMissao, setResultadoMissao] = useState(null);
     const [selectedMissao, setSelectedMissao] = useState(null);
 
     const [newMission, setNewMission] = useState({
         nome: '',
-        descricao: '',
-        classificacao: '',
+        descrição: '',
+        classificação: '',
         dificuldade: '',
         herois: '',
     });
@@ -146,8 +146,8 @@ function Missoes() {
             setSecondaryDrawerOpen(false);
             setNewMission({
                 nome: '',
-                descricao: '',
-                classificacao: '',
+                descrição: '',
+                classificação: '',
                 dificuldade: '',
                 herois: '',
             });
@@ -179,16 +179,7 @@ function Missoes() {
     };
 
     const handleResultado = async (id) => {
-        console.log('ID da missão selecionada:', id);
-    
-        if (!id) {
-            alert('ID da missão inválido');
-            return;
-        }
-    
-        // Garantir que você está enviando a missão completa
-        const missao = missoes.find(m => m.id === id);  // Encontrar a missão com o ID
-    
+        const missao = missoes.find((m) => m.id === id);
         if (!missao) {
             alert('Missão não encontrada');
             return;
@@ -198,13 +189,20 @@ function Missoes() {
             const response = await fetch(`${API_URL}/resultadomissao`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(missao),  // Enviando toda a missão, não só o id
+                body: JSON.stringify(missao),
             });
     
             if (!response.ok) throw new Error('Erro ao verificar resultado da missão');
             const resultado = await response.json();
-            
-            alert(`Resultado da Missão:\n${JSON.stringify(resultado, null, 2)}`);
+    
+            // Filtrar duplicatas se existirem
+            const resultadosUnicos = resultado.resultados.filter(
+                (item, index, self) =>
+                    index === self.findIndex((t) => t.heroi === item.heroi && t.mensagem === item.mensagem)
+            );
+    
+            setResultadoMissao({ ...resultado, resultados: resultadosUnicos });
+            setResultadoDrawerOpen(true);
         } catch (err) {
             alert('Erro ao verificar resultado: ' + err.message);
         }
@@ -261,8 +259,8 @@ function Missoes() {
                     missoes.map((missao) => (
                         <div key={missao.id} className="missaoCard">
                             <h2>{missao.nome}</h2>
-                            <p><strong>Descrição:</strong> {missao.descricao}</p>
-                            <p><strong>Classificação:</strong> {missao.classificacao}</p>
+                            <p><strong>Descrição:</strong> {missao.descrição}</p>
+                            <p><strong>Classificação:</strong> {missao.classificação}</p>
                             <p><strong>Dificuldade:</strong> {missao.dificuldade}</p>
                             <p>
                                 <strong>Heróis:</strong>{' '}
@@ -290,29 +288,55 @@ function Missoes() {
             </div>
 
             {/* Drawers */}
-            <Drawer open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-            <MissionForm
-                mission={{
-                    ...selectedMissao,
-                    herois: Array.isArray(selectedMissao?.herois)
-                        ? selectedMissao.herois.join(', ') // Convertendo array para string
-                        : selectedMissao?.herois || '', // Garantindo que seja string
-                }}
-                onChange={(e) =>
-                    setSelectedMissao({ ...selectedMissao, [e.target.name]: e.target.value })
-                }
-                onSubmit={handleEditSubmit}
-                onClose={() => setDrawerOpen(false)}
-            />
+
+            <Drawer open={resultadoDrawerOpen} onClose={() => setResultadoDrawerOpen(false)}>
+                <div style={{ padding: '20px', width: '400px' }}>
+                    <h2>Resultado da Missão</h2>
+                    {resultadoMissao && (
+                        <div>
+                            <p><strong>Missão:</strong> {resultadoMissao.missao}</p>
+                            {resultadoMissao.resultados.map((resultado, index) => (
+                                <div key={index} style={{ marginBottom: '16px' }}>
+                                    <p><strong>Mensagem:</strong> {resultado.mensagem}</p>
+                                    <p><strong>Herói:</strong> {resultado.heroi}</p>
+                                    <p><strong>Nova Popularidade:</strong> {resultado.nova_popularidade}</p>
+                                    <p><strong>Novo Nível de Força:</strong> {resultado.novo_nivel_forca}</p>
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    <Button onClick={() => setResultadoDrawerOpen(false)}>Fechar</Button>
+                </div>
             </Drawer>
 
-            <Drawer open={secondaryDrawerOpen} onClose={() => setSecondaryDrawerOpen(false)}>
-                <MissionForm
-                    mission={newMission}
-                    onChange={handleInputChange}
-                    onSubmit={handleAddMission}
-                    onClose={() => setSecondaryDrawerOpen(false)}
-                />
+            <Drawer 
+                open={drawerOpen} 
+                onClose={() => setDrawerOpen(false)}
+            >
+                <div className="drawer-container">
+                    <h2 className="drawer-header">Editar Missão</h2>
+                    <MissionForm
+                        mission={selectedMissao}
+                        onChange={(e) => setSelectedMissao({ ...selectedMissao, [e.target.name]: e.target.value })}
+                        onSubmit={handleEditSubmit}
+                        onClose={() => setDrawerOpen(false)}
+                    />
+                </div>
+            </Drawer>
+
+            <Drawer 
+                open={secondaryDrawerOpen} 
+                onClose={() => setSecondaryDrawerOpen(false)}
+            >
+                <div className="drawer-container">
+                    <h2 className="drawer-header">Inserir Missão</h2>
+                    <MissionForm
+                        mission={newMission}
+                        onChange={handleInputChange}
+                        onSubmit={handleAddMission}
+                        onClose={() => setSecondaryDrawerOpen(false)}
+                    />
+                </div>
             </Drawer>
         </div>
     );
