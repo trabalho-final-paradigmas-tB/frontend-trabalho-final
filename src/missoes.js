@@ -91,8 +91,8 @@ function Missoes() {
 
     const [newMission, setNewMission] = useState({
         nome: '',
-        descrição: '',
-        classificação: '',
+        descricao: '',
+        classificacao: '',
         dificuldade: '',
         herois: '',
     });
@@ -146,8 +146,8 @@ function Missoes() {
             setSecondaryDrawerOpen(false);
             setNewMission({
                 nome: '',
-                descrição: '',
-                classificação: '',
+                descricao: '',
+                classificacao: '',
                 dificuldade: '',
                 herois: '',
             });
@@ -212,6 +212,9 @@ function Missoes() {
         event.preventDefault();
         if (!selectedMissao) return;
     
+        const confirmEdit = window.confirm('Você tem certeza que deseja salvar as alterações desta missão?');
+        if (!confirmEdit) return;
+    
         const updatedMission = {
             ...selectedMissao,
             dificuldade: parseInt(selectedMissao.dificuldade, 10),
@@ -237,7 +240,6 @@ function Missoes() {
             alert('Erro ao editar missão: ' + err.message);
         }
     };
-    
 
     // Component principal
     if (loading) return <p>Carregando missões...</p>;
@@ -259,8 +261,8 @@ function Missoes() {
                     missoes.map((missao) => (
                         <div key={missao.id} className="missaoCard">
                             <h2>{missao.nome}</h2>
-                            <p><strong>Descrição:</strong> {missao.descrição}</p>
-                            <p><strong>Classificação:</strong> {missao.classificação}</p>
+                            <p><strong>Descrição:</strong> {missao.descricao}</p>
+                            <p><strong>Classificação:</strong> {missao.classificacao}</p>
                             <p><strong>Dificuldade:</strong> {missao.dificuldade}</p>
                             <p>
                                 <strong>Heróis:</strong>{' '}

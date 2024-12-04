@@ -19,45 +19,61 @@ function HeroDetails({ hero }) {
   };
 
   const handleDelete = async () => {
-    try {
-      const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
-        method: "DELETE",
-      });
+    const confirmDelete = window.confirm(
+        `Tem certeza de que deseja deletar o herói ${hero.nome_heroi}?`
+    );
 
-      if (response.ok) {
-        alert(`Herói ${hero.nome_heroi} deletado com sucesso.`);
-        window.location.reload();
-      } else {
-        alert("Erro ao deletar o herói.");
-      }
-    } catch (error) {
-      console.error("Erro na requisição DELETE:", error);
-      alert("Erro ao tentar deletar o herói.");
+    if (!confirmDelete) {
+        return;
     }
-  };
 
-  const handleEdit = async () => {
     try {
+        const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
+            method: "DELETE",
+        });
+
+        if (response.ok) {
+            alert(`Herói ${hero.nome_heroi} deletado com sucesso.`);
+            window.location.reload();
+        } else {
+            alert("Erro ao deletar o herói.");
+        }
+    } catch (error) {
+        console.error("Erro na requisição DELETE:", error);
+        alert("Erro ao tentar deletar o herói.");
+    }
+};
+
+const handleEdit = async () => {
+  const confirmEdit = window.confirm(
+      `Tem certeza de que deseja salvar as alterações feitas no herói ${editedHero.nome_heroi}?`
+  );
+
+  if (!confirmEdit) {
+      return; // Se o usuário cancelar, interrompe a execução
+  }
+
+  try {
       const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(formattedHero),
+          method: "PUT",
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formattedHero),
       });
 
       if (response.ok) {
-        alert(`Herói ${editedHero.nome_heroi} atualizado com sucesso.`);
-        setIsEditing(false);
-        window.location.reload();
+          alert(`Herói ${editedHero.nome_heroi} atualizado com sucesso.`);
+          setIsEditing(false);
+          window.location.reload();
       } else {
-        alert("Erro ao atualizar o herói.");
+          alert("Erro ao atualizar o herói.");
       }
-    } catch (error) {
+  } catch (error) {
       console.error("Erro na requisição PUT:", error);
       alert("Erro ao tentar atualizar o herói.");
-    }
-  };
+  }
+};
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
