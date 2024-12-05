@@ -62,6 +62,7 @@ const handleEdit = async () => {
           body: JSON.stringify(formattedHero),
       });
 
+      console.log(editedHero.historico_batalhas)
       if (response.ok) {
           alert(`Herói ${editedHero.nome_heroi} atualizado com sucesso.`);
           setIsEditing(false);
