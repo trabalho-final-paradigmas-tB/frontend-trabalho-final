@@ -1,6 +1,7 @@
 .textoInicial {
     color: white;
     font-size: 20px;
+    text-align: center;
 }
 
 .Crimes {
@@ -17,13 +18,15 @@
     border-radius: 10px;
     color: white;
     cursor: pointer;
-    transition: transform 0.3s;
+    transition: transform 0.3s, background-color 0.3s;
     font-size: 18px;
     margin-top: 20px;
+    display: flex;
 }
 
 .inserirCrime:hover {
     transform: scale(1.05);
+    background-color: #b03b3b;
 }
 
 .crime-container {
@@ -32,29 +35,40 @@
     gap: 30px;
     border-radius: 15px;
     padding: 40px;
+    align-items: center;
 }
 
 .crime-card {
     background-color: #CF4647;
     border-radius: 15px;
-    padding: 30px;
+    padding: 20px 120px;
+    width: 100%;
     color: white;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s, background-color 0.3s;
 }
 
+.crime-card:hover {
+    transform: scale(1.05);
+    background-color: #b03b3b;
+}
+
+/* Drawer */
 .drawer {
     position: fixed;
     top: 0;
     right: -100%; /* Inicialmente fora da tela */
     width: 400px;
     height: 100%;
-    background-color: white;
-    box-shadow: -2px 0 5px rgba(0, 0, 0, 0.5);
+    background-color: #ffffff;
+    box-shadow: -2px 0 10px rgba(0, 0, 0, 0.5);
     z-index: 1000;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     padding: 20px;
-    transition: right 0.3s ease-in-out; /* Animação */
+    transition: right 0.3s ease-in-out;
 }
 
 .drawer.open {
@@ -65,10 +79,26 @@
     flex: 1;
     display: flex;
     flex-direction: column;
+    gap: 20px;
 }
 
 .drawer-content h2 {
-    margin-bottom: 20px;
+    margin-bottom: 15px;
+    color: #333333;
+}
+
+.drawer-content p {
+    color: #555555;
+    line-height: 1.5;
+}
+
+.drawer-content strong {
+    color: #000;
+}
+
+.drawer-content select {
+    padding: 10px;
+    margin-bottom: 10px;
 }
 
 .drawer-content form label {
@@ -92,6 +122,7 @@
 .drawer-buttons {
     display: flex;
     justify-content: space-between;
+    margin-top: 20px;
 }
 
 .drawer-buttons button {
@@ -99,37 +130,59 @@
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.drawer-buttons button:hover {
+    transform: scale(1.05);
 }
 
 .drawer-buttons button[type="submit"] {
-    background-color: #4caf50;
+    background-color: #4CAF50;
     color: white;
+}
+
+.drawer-buttons button[type="submit"]:hover {
+    background-color: #45a049;
 }
 
 .drawer-buttons button[type="button"] {
-    background-color: #f44336;
+    background-color: #F44336;
     color: white;
 }
 
-.crime-card button {
-    padding: 10px 20px;
-    cursor: pointer;
+.drawer-buttons button[type="button"]:hover {
+    background-color: #d73833;
 }
 
-.filtros {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.filtros input {
-    margin-left: 20px;
+.close-drawer {
+    align-self: flex-end;
+    background: none;
     border: none;
-    border-radius: 5px;
-    padding: 10px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #333333;
+    transition: color 0.3s, transform 0.3s;
 }
 
-.filtros label {
-    font-size: 20px;
+.close-drawer:hover {
+    color: #CF4647;
+    transform: scale(1.2);
+}
+
+.crime-actions {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: start;
+}
+
+.crime-actions button {
+    padding: 10px;
+    border: none;
+    background-color: #CF4647;
     color: white;
+    border-radius: 10px;
+    cursor: pointer;
 }
