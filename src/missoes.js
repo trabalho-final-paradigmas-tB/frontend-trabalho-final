@@ -119,6 +119,8 @@ function Missoes() {
     const [resultadoDrawerOpen, setResultadoDrawerOpen] = useState(false);
     const [resultadoMissao, setResultadoMissao] = useState(null);
     const [selectedMissao, setSelectedMissao] = useState(null);
+    const [filterDificuldade, setFilterDificuldade] = useState('');
+    const [filterHeroi, setFilterHeroi] = useState('');
 
     const [newMission, setNewMission] = useState({
         nome: '',
@@ -147,6 +149,16 @@ function Missoes() {
         };
         fetchMissoes();
     }, []);
+
+    const filtrarMissoes = () => {
+        return missoes.filter((missao) => {
+            const dificuldadeMatch =
+                !filterDificuldade || missao.dificuldade === parseInt(filterDificuldade, 10);
+            const heroiMatch =
+                !filterHeroi || (missao.herois && missao.herois.some((heroi) => heroi.toLowerCase().includes(filterHeroi.toLowerCase())));
+            return dificuldadeMatch && heroiMatch;
+        });
+    };
 
     // Handlers de formulários
     const handleInputChange = (e) => {
@@ -297,15 +309,33 @@ console.log('Recompensa Valor:', newMission.recompensa_valor);
             <h1 className="titleMissao">Missões</h1>
             <button className='butaoInserir' onClick={() => setSecondaryDrawerOpen(true)}>Inserir missão</button>
 
+            <div className="filtros">
+                <TextField
+                    label="Filtrar por Dificuldade"
+                    type="number"
+                    inputProps={{ min: 1, max: 10 }}
+                    value={filterDificuldade}
+                    onChange={(e) => setFilterDificuldade(e.target.value)}
+                    margin="normal"
+                    style={{ marginRight: '16px' }}
+                />
+                <TextField
+                    label="Filtrar por Herói"
+                    value={filterHeroi}
+                    onChange={(e) => setFilterHeroi(e.target.value)}
+                    margin="normal"
+                />
+            </div>
+
             <div className="listaMissoes">
                 {loading ? (
                     <p>Carregando missões...</p>
                 ) : error ? (
                     <p className="error">Erro ao carregar missões: {error}</p>
-                ) : !missoes || missoes.length === 0 ? (
-                    <p className="nenhumaMissao">Nenhuma missão disponível no momento.</p>
+                ) : !filtrarMissoes() || filtrarMissoes().length === 0 ? (
+                    <p className="nenhumaMissao">Nenhuma missão disponível com os filtros selecionados.</p>
                 ) : (
-                    missoes.map((missao) => (
+                    filtrarMissoes().map((missao) => (
                         <div key={missao.id} className="missaoCard">
                             <h2>{missao.nome}</h2>
                             <p><strong>Descrição:</strong> {missao.descricao}</p>
@@ -338,6 +368,7 @@ console.log('Recompensa Valor:', newMission.recompensa_valor);
                     ))
                 )}
             </div>
+
 
             {/* Drawers */}
 

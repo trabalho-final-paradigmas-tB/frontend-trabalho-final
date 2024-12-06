@@ -10,6 +10,10 @@ function Crimes() {
     const [isEditing, setIsEditing] = useState(false); // Controle do drawer de edição
     const [editedCrime, setEditedCrime] = useState(null);
     const [isInserting, setIsInserting] = useState(false); // Controle do drawer de inserção
+    const [selectedHeroi, setSelectedHeroi] = useState(""); // Herói selecionado
+    const [severityRange, setSeverityRange] = useState([1, 10]); // Intervalo de severidade
+    const [filteredCrimes, setFilteredCrimes] = useState([]);
+
     const [newCrime, setNewCrime] = useState({
         nome: "",
         descricao: "",
@@ -22,6 +26,10 @@ function Crimes() {
         fetchCrimes();
         fetchHerois();
     }, []);
+
+    useEffect(() => {
+        applyFilters();
+    }, [crimes, selectedHeroi, severityRange]);
 
     const fetchCrimes = async () => {
         try {
@@ -36,6 +44,22 @@ function Crimes() {
         } finally {
             setLoading(false);
         }
+    };
+
+    const applyFilters = () => {
+        const filtered = crimes.filter(crime => {
+            const matchesHeroi = selectedHeroi
+                ? crime.heroi_responsavel === selectedHeroi
+                : true; // Sem filtro de herói se vazio
+    
+            const matchesSeverity = 
+                crime.severidade >= severityRange[0] &&
+                crime.severidade <= severityRange[1]; // Dentro do intervalo
+    
+            return matchesHeroi && matchesSeverity;
+        });
+    
+        setFilteredCrimes(filtered); // Atualiza a lista filtrada
     };
 
     const fetchHerois = async () => {
@@ -154,13 +178,51 @@ function Crimes() {
             <button className="inserirCrime" onClick={() => setIsInserting(true)}>
                 Adicionar Crime
             </button>
+            <div className="filtros2">
+                <h3>Filtrar Crimes</h3>
+                
+                {/* Filtro por Herói */}
+                <select
+                    value={selectedHeroi}
+                    onChange={(e) => setSelectedHeroi(e.target.value)}
+                >
+                    <option value="">Todos os Heróis</option>
+                    {herois.map((heroi) => (
+                        <option key={heroi.codigo_heroi} value={heroi.codigo_heroi}>
+                            {heroi.nome_heroi}
+                        </option>
+                    ))}
+                </select>
+
+                {/* Filtro por Severidade */}
+                <div className="severidade">
+                    <label>Severidade:</label>
+                    <input
+                        type="number"
+                        value={severityRange[0]}
+                        onChange={(e) =>
+                            setSeverityRange([Number(e.target.value), severityRange[1]])
+                        }
+                        min="1"
+                    />
+                    <span>até</span>
+                    <input
+                        type="number"
+                        value={severityRange[1]}
+                        onChange={(e) =>
+                            setSeverityRange([severityRange[0], Number(e.target.value)])
+                        }
+                        max="10"
+                    />
+                </div>
+            </div>
             <p className="textoInicial">Clique em um dos crimes abaixo ou adicione um novo.</p>
             {loading && <p>Carregando crimes...</p>}
             {error && <p style={{ color: "red" }}>{error}</p>}
             <div className="crime-container">
                 {!loading && !error && (
-                    crimes.length > 0 ? (
-                        crimes.map((crime) => (
+                    filteredCrimes.length > 0 ? (
+                        filteredCrimes.map((crime) => (
                             <div
                                 key={crime.id}
                                 className="crime-card"
