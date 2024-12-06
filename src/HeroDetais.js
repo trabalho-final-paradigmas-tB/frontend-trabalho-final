@@ -16,65 +16,66 @@ function HeroDetails({ hero }) {
     peso_heroi: parseFloat(editedHero.peso_heroi),
     nivel_forca: parseInt(editedHero.nivel_forca, 10),
     popularidade: parseInt(editedHero.popularidade, 10),
+    vitorias: parseInt(editedHero.vitorias, 10),
+    derrotas: parseInt(editedHero.derrotas, 10),
   };
 
   const handleDelete = async () => {
     const confirmDelete = window.confirm(
-        `Tem certeza de que deseja deletar o herói ${hero.nome_heroi}?`
+      `Tem certeza de que deseja deletar o herói ${hero.nome_heroi}?`
     );
 
     if (!confirmDelete) {
-        return;
+      return;
     }
 
     try {
-        const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
-            method: "DELETE",
-        });
-
-        if (response.ok) {
-            alert(`Herói ${hero.nome_heroi} deletado com sucesso.`);
-            window.location.reload();
-        } else {
-            alert("Erro ao deletar o herói.");
-        }
-    } catch (error) {
-        console.error("Erro na requisição DELETE:", error);
-        alert("Erro ao tentar deletar o herói.");
-    }
-};
-
-const handleEdit = async () => {
-  const confirmEdit = window.confirm(
-      `Tem certeza de que deseja salvar as alterações feitas no herói ${editedHero.nome_heroi}?`
-  );
-
-  if (!confirmEdit) {
-      return; // Se o usuário cancelar, interrompe a execução
-  }
-
-  try {
       const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
-          method: "PUT",
-          headers: {
-              "Content-Type": "application/json",
-          },
-          body: JSON.stringify(formattedHero),
+        method: "DELETE",
       });
 
-      console.log(editedHero.historico_batalhas)
       if (response.ok) {
-          alert(`Herói ${editedHero.nome_heroi} atualizado com sucesso.`);
-          setIsEditing(false);
-          window.location.reload();
+        alert(`Herói ${hero.nome_heroi} deletado com sucesso.`);
+        window.location.reload();
       } else {
-          alert("Erro ao atualizar o herói.");
+        alert("Erro ao deletar o herói.");
       }
-  } catch (error) {
+    } catch (error) {
+      console.error("Erro na requisição DELETE:", error);
+      alert("Erro ao tentar deletar o herói.");
+    }
+  };
+
+  const handleEdit = async () => {
+    const confirmEdit = window.confirm(
+      `Tem certeza de que deseja salvar as alterações feitas no herói ${editedHero.nome_heroi}?`
+    );
+
+    if (!confirmEdit) {
+      return;
+    }
+
+    try {
+      const response = await fetch(`/heroi/${hero.codigo_heroi}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(formattedHero),
+      });
+
+      if (response.ok) {
+        alert(`Herói ${editedHero.nome_heroi} atualizado com sucesso.`);
+        setIsEditing(false);
+        window.location.reload();
+      } else {
+        alert("Erro ao atualizar o herói.");
+      }
+    } catch (error) {
       console.error("Erro na requisição PUT:", error);
       alert("Erro ao tentar atualizar o herói.");
-  }
-};
+    }
+  };
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -179,10 +180,20 @@ const handleEdit = async () => {
           />
           <br />
 
-          <label>Histórico de Batalhas:</label>
-          <textarea
-            name="historico_batalhas"
-            value={editedHero.historico_batalhas}
+          <label>Vitórias:</label>
+          <input
+            type="number"
+            name="vitorias"
+            value={editedHero.vitorias}
+            onChange={handleInputChange}
+          />
+          <br />
+
+          <label>Derrotas:</label>
+          <input
+            type="number"
+            name="derrotas"
+            value={editedHero.derrotas}
             onChange={handleInputChange}
           />
           <br />
@@ -216,9 +227,8 @@ const handleEdit = async () => {
           <p><strong>Nível de Força:</strong> {hero.nivel_forca}</p>
           <p><strong>Popularidade:</strong> {hero.popularidade}</p>
           <p><strong>Status:</strong> {hero.status}</p>
-          <p>
-            <strong>Histórico de Batalhas:</strong> {`${hero.historico_batalhas[0]} vitórias e ${hero.historico_batalhas[1]} derrotas`}
-          </p>
+          <p><strong>Vitórias:</strong> {hero.vitorias}</p>
+          <p><strong>Derrotas:</strong> {hero.derrotas}</p>
           <p><strong>Data de Nascimento:</strong> {formatDate(hero.data_nascimento)}</p>
           <button className="deleteButton" onClick={handleDelete}>Deletar Herói</button>
           <button className="editButton" onClick={() => setIsEditing(true)}>Editar Herói</button>

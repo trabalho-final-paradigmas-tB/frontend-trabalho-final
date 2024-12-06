@@ -92,11 +92,12 @@ h1 {
 .drawer-container p {
     font-size: 1rem;
     margin: 5px 0;
+    color: black;
 }
 
 .drawer-container p strong {
     font-weight: bold;
-    color: #f1f1f1;
+    color: black;
 }
 
 .drawer-container button {

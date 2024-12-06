@@ -58,6 +58,37 @@ const MissionForm = ({ mission, onChange, onSubmit, onClose }) => (
             value={mission.herois}
             onChange={onChange}
         />
+        <TextField
+            select
+            name="recompensa_tipo"
+            label="Recompensa Tipo"
+            fullWidth
+            margin="normal"
+            value={mission.recompensa_tipo}
+            onChange={onChange}
+            SelectProps={{
+                native: true,
+            }}
+            required
+        >
+            <option value="" disabled>
+                Selecione...
+            </option>
+            <option value="Força">Força</option>
+            <option value="Popularidade">Popularidade</option>
+        </TextField>
+
+        <TextField
+            name="recompensa_valor"
+            label="Recompensa Valor"
+            type="number"
+            fullWidth
+            margin="normal"
+            inputProps={{ min: 0 }}
+            required
+            value={mission.recompensa_valor}
+            onChange={onChange}
+        />
         <Button
             type="submit"
             variant="contained"
@@ -95,6 +126,8 @@ function Missoes() {
         classificacao: '',
         dificuldade: '',
         herois: '',
+        recompensa_tipo: '',
+        recompensa_valor: '',
     });
 
     // Fetch de missões
@@ -104,6 +137,7 @@ function Missoes() {
                 const response = await fetch(API_URL);
                 if (!response.ok) throw new Error('Erro ao buscar missões');
                 const data = await response.json();
+                console.log('Missões retornadas:', data);
                 setMissoes(data);
             } catch (err) {
                 setError(err.message);
@@ -125,13 +159,20 @@ function Missoes() {
         setDrawerOpen(true);
     };
 
+    console.log('Recompensa Tipo:', newMission.recompensa_tipo);
+console.log('Recompensa Valor:', newMission.recompensa_valor);
+
+
     const handleAddMission = async (event) => {
         event.preventDefault();
         const missionData = {
             ...newMission,
             dificuldade: parseInt(newMission.dificuldade, 10),
+            recompensa_valor: parseInt(newMission.recompensa_valor), // Certifique-se de que este campo tem um valor válido
             herois: newMission.herois.split(',').map((h) => h.trim()),
         };
+        
+        console.log('Dados da missão enviados:', missionData);
 
         try {
             const response = await fetch(API_URL, {
@@ -150,10 +191,14 @@ function Missoes() {
                 classificacao: '',
                 dificuldade: '',
                 herois: '',
+                recompensa_tipo: '',
+                recompensa_valor: '',
             });
+            window.location.reload();
         } catch (err) {
             alert('Erro ao adicionar missão: ' + err.message);
         }
+
     };
 
     const handleDelete = async (id) => {
@@ -245,6 +290,8 @@ function Missoes() {
     if (loading) return <p>Carregando missões...</p>;
     if (error) return <p>Erro: {error}</p>;
 
+    console.log(missoes)
+
     return (
         <div className="Missoes">
             <h1 className="titleMissao">Missões</h1>
@@ -268,6 +315,9 @@ function Missoes() {
                                 <strong>Heróis:</strong>{' '}
                                 {missao.herois && missao.herois.length > 0 ? missao.herois.join(', ') : 'Nenhum'}
                             </p>
+                            <p><strong>Recompensa Tipo:</strong> {missao.recompensa_tipo || 'Não especificado'}</p>
+                            <p><strong>Recompensa Valor:</strong> {missao.recompensa_valor || 'Não especificado'}</p>
+
                             <Button onClick={() => handleEditClick(missao)}>Editar</Button>
                             <Button
                                 onClick={() => handleDelete(missao.id)}
